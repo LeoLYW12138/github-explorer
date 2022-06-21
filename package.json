@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@octokit/graphql": "^4.8.0",
+    "isomorphic-fetch": "^3.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
