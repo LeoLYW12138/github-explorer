@@ -1,0 +1,27 @@
+.section {
+    background-color: var(--theme-color-secondary);
+}
+
+.container {
+    composes: container from "@/utils.module.css";
+}
+
+.logo {
+    max-width: 250px;
+}
+
+.title {
+    composes: font-mont from "@/utils.module.css";
+    font-size: 3rem;
+}
+
+.description {
+    composes: font-mont from "@/utils.module.css";
+    font-size: 1.2rem;
+}
+
+@media (min-width: 1000px){
+    .section {
+        min-height: 660px;
+    }
+}

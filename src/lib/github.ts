@@ -1,6 +1,15 @@
 import { graphql, GraphqlResponseError } from "@octokit/graphql"
 
-console.log(import.meta.env.VITE_GITHUB_TOKEN)
+// const appAuth = createOAuthAppAuth({
+//   clientType: "oauth-app",
+//   clientId: import.meta.env.VITE_GITHUB_OAUTH_CLIENT_ID,
+//   clientSecret: import.meta.env.VITE_GITHUB_OAUTH_CLIENT_SECRET,
+// })
+
+// const userAuth = await appAuth({
+//   type: "oauth-app",
+
+// })
 
 const gql = graphql.defaults({
   headers: {

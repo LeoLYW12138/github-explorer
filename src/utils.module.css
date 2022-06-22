@@ -1,0 +1,10 @@
+.font-mont {
+  font-family: "Montserrat", "Roboto", sans-serif;
+  font-weight: bold;
+}
+
+.container {
+    width: 80%;
+    max-width: 1920px;
+    margin: 0 auto;
+}

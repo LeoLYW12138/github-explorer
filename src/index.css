@@ -1,3 +1,5 @@
+@import url('sanitize.css');
+
 body {
   margin: 0;
   font-family: 'Roboto', 'Oxygen',
@@ -5,6 +7,10 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  max-width: 100%;
 }
 
 code {
