@@ -1,25 +1,36 @@
-import React, { useState } from "react"
+import { ReactComponent as IconSearch } from "@/icons/IconSearch.svg"
+import React, { useRef, useState } from "react"
+import styles from "./SearchInput.module.css"
 
 const SearchInput = () => {
-  const [searchInput, setSearchInput] = useState("")
+  const [searchValue, setSearchValue] = useState("")
+  const searchInput = useRef<HTMLInputElement>(null)
 
   const formOnSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
-    console.log(searchInput)
+    console.log(searchValue)
   }
 
   return (
     <form onSubmit={formOnSubmit}>
-      <label htmlFor="search">Search:</label>
-      <input
-        type="search"
-        name="search"
-        id="search"
-        placeholder="Search User"
-        value={searchInput}
-        onChange={(e) => setSearchInput(e.target.value)}
-      />
-      <button type="submit">Search</button>
+      {/* <label htmlFor="search" className={styles.label}>
+        Search:
+      </label> */}
+      <div className={styles.search}>
+        <input
+          type="search"
+          name="search"
+          id="search"
+          ref={searchInput}
+          className={styles.input}
+          placeholder="Search User"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+        />
+        <button type="submit" className={styles["search-button"]}>
+          <IconSearch />
+        </button>
+      </div>
     </form>
   )
 }

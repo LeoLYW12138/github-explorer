@@ -1,6 +1,7 @@
 import Button from "@/components/Button"
 import { ReactComponent as IconArrowRight } from "@/icons/IconArrowRight.svg"
 import { ReactComponent as IconGithub } from "@/icons/IconGithub.svg"
+
 import styles from "./Intro.module.css"
 
 function Intro() {

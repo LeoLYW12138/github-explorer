@@ -4,7 +4,9 @@ import styles from "./Main.module.css"
 function Main() {
   return (
     <main className={styles.main}>
-      <SearchBar></SearchBar>
+      <div className={styles.container}>
+        <SearchBar></SearchBar>
+      </div>
     </main>
   )
 }

@@ -1,1 +1,8 @@
+.main {
+  background-color: var(--theme-color-primary);
+  padding: 2em 0;
+}
 
+.container {
+  composes: container from "@/utils.module.css";
+}
