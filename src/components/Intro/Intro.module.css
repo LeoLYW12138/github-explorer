@@ -1,27 +1,58 @@
 .section {
-    background-color: var(--theme-color-secondary);
+  background-color: var(--theme-color-secondary);
+  padding: 2rem 0;
 }
 
 .container {
-    composes: container from "@/utils.module.css";
+  composes: container from "@/utils.module.css";
 }
 
 .logo {
-    max-width: 250px;
+  display: block;
+  max-width: 250px;
+  margin: 0 auto;
 }
 
 .title {
-    composes: font-mont from "@/utils.module.css";
-    font-size: 3rem;
+  composes: font-mont from "@/utils.module.css";
+  font-size: 3rem;
 }
 
 .description {
-    composes: font-mont from "@/utils.module.css";
-    font-size: 1.2rem;
+  composes: font-mont from "@/utils.module.css";
+  font-size: 1.2rem;
 }
 
-@media (min-width: 1000px){
-    .section {
-        min-height: 660px;
-    }
+@media (min-width: 1000px) {
+  .section {
+    min-height: 660px;
+    display: grid;
+    align-content: center;
+  }
+
+  .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo-container {
+    width: 25%;
+  }
+
+  .main-container {
+    width: 70%;
+  }
+
+  .logo {
+    max-width: 100%;
+  }
+
+  .title {
+    font-size: 5.625rem;
+  }
+
+  .description {
+    font-size: 1.875rem;
+  }
 }
