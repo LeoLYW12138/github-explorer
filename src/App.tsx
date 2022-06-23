@@ -1,5 +1,5 @@
 import Intro from "@/components/Intro"
-import SearchBar from "@/components/SearchBar"
+import Main from "@/components/Main"
 import { useEffect, useState } from "react"
 import "./App.css"
 
@@ -14,7 +14,7 @@ function App() {
   return (
     <>
       <Intro />
-      <SearchBar></SearchBar>
+      <Main />
       <pre>{result}</pre>
     </>
   )

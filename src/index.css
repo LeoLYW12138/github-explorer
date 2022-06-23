@@ -1,6 +1,13 @@
 @import url(normalize.css);
 
+html {
+  min-height: 100dvh;
+  height: 100%;
+}
+
 body {
+  height: 100vh;
+  max-height: -webkit-fill-available;
   margin: 0;
   font-family: "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
     "Helvetica Neue", sans-serif;

@@ -11,3 +11,7 @@
   --theme-color-tertiary-rgb: 233, 234, 236;
   --theme-color-accent-rgb: 250, 208, 44;
 }
+
+body {
+  background-color: var(--theme-color-primary);
+}

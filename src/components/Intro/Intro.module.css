@@ -10,7 +10,6 @@
 .logo {
   display: block;
   max-width: 250px;
-  margin: 0 auto;
 }
 
 .title {
@@ -21,6 +20,7 @@
 .description {
   composes: font-mont from "@/utils.module.css";
   font-size: 1.2rem;
+  max-width: 35ch;
 }
 
 .button {
@@ -70,6 +70,7 @@
 
   .logo {
     max-width: 100%;
+    margin: 0 auto;
   }
 
   .title {
