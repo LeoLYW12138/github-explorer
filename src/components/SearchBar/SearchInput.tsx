@@ -1,3 +1,4 @@
+import { useKeyPress } from "@/hooks"
 import { ReactComponent as IconSearch } from "@/icons/IconSearch.svg"
 import React, { useRef, useState } from "react"
 import styles from "./SearchInput.module.css"
@@ -5,6 +6,13 @@ import styles from "./SearchInput.module.css"
 const SearchInput = () => {
   const [searchValue, setSearchValue] = useState("")
   const searchInput = useRef<HTMLInputElement>(null)
+  useKeyPress(
+    ["Control", "k"],
+    () => {
+      searchInput.current?.focus()
+    },
+    true
+  )
 
   const formOnSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
