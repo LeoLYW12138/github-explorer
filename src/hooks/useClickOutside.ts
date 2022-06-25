@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef } from "react"
 
-export const useClickOutside = (callback: () => void) => {
-  const ref = useRef<HTMLElement>(null)
+export function useClickOutside<T extends HTMLElement>(callback: () => void) {
+  const ref = useRef<T>(null)
   const callbackRef = useRef(callback)
   useLayoutEffect(() => {
     callbackRef.current = callback

@@ -1,6 +1,6 @@
 import { useClickOutside } from "@/hooks"
 import { ReactComponent as IconSort } from "@/icons/IconSort.svg"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import styles from "./Dropdown.module.css"
 
 export type option = {
@@ -16,8 +16,9 @@ interface DropdownItemProps {
 
 export interface DropdownProps {
   options: option[]
-  defaultValue?: option
+  defaultOption?: option
   placeholder?: string
+  desc?: string
   onSelect?: (option: option) => void
 }
 
@@ -28,7 +29,12 @@ export function DropdownItem({
   ...rest
 }: DropdownItemProps & React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div role="option" className={`${styles.item} ${className}`} onClick={onClick} {...rest}>
+    <div
+      role="option"
+      className={`${styles.item} ${className ? className : ""}`}
+      onClick={onClick}
+      {...rest}
+    >
       {option.name}
     </div>
   )
@@ -36,15 +42,18 @@ export function DropdownItem({
 
 function Dropdown({
   options,
-  defaultValue,
+  defaultOption,
   placeholder,
+  desc,
   onSelect,
   ...rest
 }: DropdownProps & React.HTMLAttributes<HTMLDivElement>) {
   const [isOpen, setIsOpen] = useState(false)
   const [items] = useState(options)
-  const [selected, setSelected] = useState<option | null>(defaultValue ?? null)
-  const clickOutsideRef = useClickOutside(() => setIsOpen(false))
+  const [selected, setSelected] = useState<option | null>(defaultOption ?? null)
+  const boxRef = useRef<HTMLDivElement>(null)
+  const optionListRef = useRef<HTMLDivElement>(null)
+  const clickOutsideRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false))
 
   const handleItemClick = (item: option) => {
     setSelected(item)
@@ -53,33 +62,48 @@ function Dropdown({
   }
 
   return (
-    <div className={styles.dropdown} {...rest}>
+    <div className={styles.dropdown} {...rest} ref={clickOutsideRef}>
+      {/* select box of the dropdown */}
       <div
         className={styles.box}
         tabIndex={0}
+        ref={boxRef}
         onClick={() => setIsOpen(!isOpen)}
         onKeyDown={(e) => {
           if (e.key === "Enter") setIsOpen(!isOpen)
+          // focus the first option in the list
+          if (e.key === "ArrowDown")
+            (optionListRef.current?.querySelector(`.${styles.item}`) as HTMLElement)?.focus()
         }}
       >
         <span className={styles.placeholder}>{selected?.name ?? placeholder}</span>
         <IconSort className={`${styles.icon} ${isOpen && styles.open}`} />
       </div>
-      <div role="listbox" className={`${styles.list} ${(isOpen && styles.open) || ""}`}>
-        {items?.map((item) => (
+
+      {/* dropdown options */}
+      <div
+        role="listbox"
+        ref={optionListRef}
+        className={`${styles.list} ${(isOpen && styles.open) || ""}`}
+      >
+        <h6 className={styles.desc}>{desc}</h6>
+        {items?.map((item, index) => (
           <DropdownItem
             key={item.id}
             tabIndex={0}
             option={item}
             onClick={() => handleItemClick(item)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleItemClick(item)
-              }
-              if (e.key === "ArrowDown") {
+              if (e.key === "Enter") handleItemClick(item)
+
+              if (e.key === "ArrowDown")
                 e.currentTarget.nextSibling && (e.currentTarget.nextSibling as HTMLElement).focus()
-              }
+
               if (e.key === "ArrowUp") {
+                if (index === 0) {
+                  boxRef.current?.focus()
+                  return
+                }
                 e.currentTarget.previousSibling &&
                   (e.currentTarget.previousSibling as HTMLElement).focus()
               }
