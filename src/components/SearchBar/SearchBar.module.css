@@ -1,7 +1,21 @@
 .searchBar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 1em;
   flex-wrap: wrap;
+}
+
+@media (min-width: 1000px) {
+  .searchBar {
+    justify-content: center;
+    gap: 2em;
+  }
+
+  .dropdown-sort {
+    order: 1;
+  }
+
+  .dropdown-repo {
+    order: -1;
+  }
 }

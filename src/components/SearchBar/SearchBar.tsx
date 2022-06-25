@@ -31,12 +31,14 @@ const SearchBar = () => {
         onSubmit={() => console.log(username)}
       />
       <Dropdown
+        className={styles["dropdown-sort"]}
         options={sortOptions}
         defaultOption={sortOptions[0]}
         desc="Sort by"
         onSelect={(option) => console.log(option.name)}
       ></Dropdown>
       <Dropdown
+        className={styles["dropdown-repo"]}
         options={numInPageOptions}
         defaultOption={numInPageOptions[0]}
         suffix=" repos"

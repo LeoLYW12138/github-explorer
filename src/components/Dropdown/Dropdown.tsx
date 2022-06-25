@@ -46,6 +46,7 @@ function Dropdown({
   desc,
   prefix = "",
   suffix = "",
+  className,
   onSelect,
   ...rest
 }: DropdownProps) {
@@ -85,7 +86,7 @@ function Dropdown({
   }
 
   return (
-    <div className={styles.dropdown} {...rest} ref={clickOutsideRef}>
+    <div className={`${styles.dropdown} ${className ?? ""}`} {...rest} ref={clickOutsideRef}>
       {/* select box of the dropdown */}
       <div
         className={styles.box}
