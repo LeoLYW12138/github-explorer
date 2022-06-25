@@ -10,6 +10,7 @@
 }
 
 .input {
+  width: 100%;
   background-color: var(--theme-color-tertiary);
   border: none;
   border-radius: 9999px 0 0 9999px;
@@ -28,12 +29,35 @@
   font-style: italic;
 }
 
+.reset-button {
+  background: transparent;
+  visibility: hidden;
+
+  position: absolute;
+  inset: 0 2.1em 0 auto;
+  display: inline-flex;
+  align-items: center;
+
+  font-size: 1.2em;
+  cursor: default;
+  user-select: none !important;
+}
+
+/* https://stackoverflow.com/questions/16952526/detect-if-an-input-has-text-in-it-using-css-on-a-page-i-am-visiting-and-do-no */
+.input:not(:placeholder-shown) ~ .reset-button {
+  visibility: visible;
+}
+
+.input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  opacity: 0;
+}
+
 .search-button {
   background-color: var(--theme-color-accent);
   border-radius: 0 9999px 9999px 0;
   padding-right: 0.5em;
   padding-left: 0.5em;
-  margin-left: -0.5em;
 
   font-size: 1.2em;
   cursor: pointer;

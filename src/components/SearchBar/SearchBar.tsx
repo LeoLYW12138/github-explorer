@@ -21,6 +21,7 @@ const SearchBar = () => {
         placeholder="Search User"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
+        onSubmit={() => console.log(username)}
       />
       <Dropdown options={options} defaultOption={options[0]} desc="Sort by"></Dropdown>
     </div>
