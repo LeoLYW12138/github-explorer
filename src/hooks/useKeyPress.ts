@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useLayoutEffect, useReducer, useRef } from "react"
 
-export type KeyCombination = string[] | string[][]
+export type KeyCombination = readonly string[] | readonly string[][]
 export type Node = React.RefObject<HTMLElement> | null
 
 const blacklistedTargets: string[] = []
@@ -17,7 +17,7 @@ const keysReducer = (state: Record<string, boolean>, action: { type: string; key
 }
 
 export const useKeyPress = (
-  keys: string[],
+  keys: readonly string[],
   callback: (keys: Record<string, boolean>) => void,
   preventDefault = false,
   elem?: Node | undefined

@@ -1,13 +1,22 @@
+import React, { useRef } from "react"
+
 import { useKeyPress } from "@/hooks"
 import { ReactComponent as IconSearch } from "@/icons/IconSearch.svg"
-import React, { useRef, useState } from "react"
 import styles from "./SearchInput.module.css"
 
-const SearchInput = () => {
-  const [searchValue, setSearchValue] = useState("")
+export interface SearchInputProps {
+  onSubmit?: React.FormEventHandler<HTMLFormElement>
+  shortcutKey?: readonly string[]
+}
+
+const SearchInput = ({
+  onSubmit,
+  shortcutKey = ["Control", "k"],
+  ...rest
+}: SearchInputProps & React.InputHTMLAttributes<HTMLInputElement>) => {
   const searchInput = useRef<HTMLInputElement>(null)
   useKeyPress(
-    ["Control", "k"],
+    shortcutKey,
     () => {
       searchInput.current?.focus()
     },
@@ -16,7 +25,7 @@ const SearchInput = () => {
 
   const formOnSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()
-    console.log(searchValue)
+    onSubmit && onSubmit(e)
   }
 
   return (
@@ -25,16 +34,7 @@ const SearchInput = () => {
         Search:
       </label> */}
       <div className={styles.search}>
-        <input
-          type="search"
-          name="search"
-          id="search"
-          ref={searchInput}
-          className={styles.input}
-          placeholder="Search User"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
+        <input type="search" ref={searchInput} className={styles.input} {...rest} />
         <button type="submit" className={styles["search-button"]}>
           <IconSearch />
         </button>

@@ -1,6 +1,7 @@
+import { useRef, useState } from "react"
+
 import { useClickOutside } from "@/hooks"
 import { ReactComponent as IconSort } from "@/icons/IconSort.svg"
-import { useRef, useState } from "react"
 import styles from "./Dropdown.module.css"
 
 export type option = {

@@ -1,10 +1,12 @@
+import { useId, useState } from "react"
+
 import type { option } from "@/components/Dropdown"
-import { useId } from "react"
 import Dropdown from "../Dropdown"
 import styles from "./SearchBar.module.css"
 import SearchInput from "./SearchInput"
 
 const SearchBar = () => {
+  const [username, setUsername] = useState("")
   const options: option[] = [
     { id: useId(), name: "Name", value: "name" },
     { id: useId(), name: "Last update", value: "last-update" },
@@ -13,7 +15,13 @@ const SearchBar = () => {
   ]
   return (
     <div className={styles.searchBar}>
-      <SearchInput />
+      <SearchInput
+        id="github-username"
+        name="github-username"
+        placeholder="Search User"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
       <Dropdown options={options} defaultOption={options[0]} desc="Sort by"></Dropdown>
     </div>
   )
