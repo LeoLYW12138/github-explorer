@@ -1,13 +1,13 @@
 .dropdown {
   position: relative;
-  min-width: 19ch;
+  composes: shadow-sm from "@/utils.module.css";
 }
 
 .box {
   display: flex;
   position: relative;
   align-items: center;
-  gap: 1em;
+  /* gap: 1em; */
   background-color: var(--theme-color-tertiary);
   border-radius: 9999px;
   padding: 0.5em 1em;
@@ -33,7 +33,7 @@
 
 .list {
   position: absolute;
-  inset: 120% -20% auto 0;
+  inset: 120% max(-20%, -1em) auto 0;
   background-color: var(--theme-color-tertiary);
   border-radius: 0.75em;
   padding: 0.5em 0;
@@ -62,6 +62,6 @@
   }
 
   .list {
-    inset: 120% 0 auto -20%;
+    inset: 120% 0 auto max(-20%, -1em);
   }
 }
