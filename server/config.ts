@@ -10,16 +10,18 @@ dotenv.config({ path: path.resolve(__dirname, ".env") })
 
 interface ENV {
   PORT: number | undefined
-  HOST: string | undefined
+  FRONTEND_HOST: string | undefined
   GITHUB_OAUTH_CLIENT_ID: string | undefined
   GITHUB_OAUTH_CLIENT_SECRET: string | undefined
+  GITHUB_OAUTH_UNIQUE_STATE: string | undefined
 }
 
 interface Config {
   PORT: number
-  HOST: string
+  FRONTEND_HOST: string
   GITHUB_OAUTH_CLIENT_ID: string
   GITHUB_OAUTH_CLIENT_SECRET: string
+  GITHUB_OAUTH_UNIQUE_STATE: string
 }
 
 // Loading process.env as ENV interface
@@ -27,9 +29,10 @@ interface Config {
 const getConfig = (): ENV => {
   return {
     PORT: process.env.PORT ? Number(process.env.PORT) : undefined,
-    HOST: process.env.HOST,
+    FRONTEND_HOST: process.env.FRONTEND_HOST,
     GITHUB_OAUTH_CLIENT_ID: process.env.GITHUB_OAUTH_CLIENT_ID,
     GITHUB_OAUTH_CLIENT_SECRET: process.env.GITHUB_OAUTH_CLIENT_SECRET,
+    GITHUB_OAUTH_UNIQUE_STATE: process.env.GITHUB_OAUTH_UNIQUE_STATE,
   }
 }
 

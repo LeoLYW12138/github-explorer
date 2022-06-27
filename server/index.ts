@@ -7,7 +7,7 @@ import config from "./config"
 
 const app = express()
 const corsOptions = {
-  origin: ["http://localhost:3000"],
+  origin: [config.FRONTEND_HOST],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
   allowedHeaders: ["Content-Type", "Authorization"],
 }
@@ -27,30 +27,38 @@ app.get("/", (req: Request, res: Response) => {
   res.status(200).send("Hello there!")
 })
 
-app.get("/signIn/callback", async (req: Request, res: Response) => {
-  // /signIn/callback?=code=1232543152
+app.get("/oauth/callback", async (req: Request, res: Response) => {
+  // /oauth/callback?code=1232543152
   const { code } = req.query
 
   if (!code) {
-    res.redirect("http://localhost:3000")
+    console.error("No code in callback")
+    res.redirect(`${config.FRONTEND_HOST}?token=${encodeURIComponent("__invalid__NO_CODE")}`)
     // send({
     //   ok: false,
     //   error: "Error: no code in callback",
     // })
   }
 
-  const userAuthFromWebFlow = await auth({
-    type: "oauth-user",
-    code: code as string,
-    state: "myUniqueState12138",
-  })
+  try {
+    const userAuthFromWebFlow = await auth({
+      type: "oauth-user",
+      code: code as string,
+      state: config.GITHUB_OAUTH_UNIQUE_STATE,
+    })
 
-  res.status(200).json({
-    success: true,
-    data: {
-      token: userAuthFromWebFlow.token,
-    },
-  })
+    console.log("Authenticated and redirect user to ", config.FRONTEND_HOST)
+    res.redirect(`${config.FRONTEND_HOST}?token=${userAuthFromWebFlow.token}`)
+    // res.status(200).json({
+    //   success: true,
+    //   data: {
+    //     token: userAuthFromWebFlow.token,
+    //   },
+    // })
+  } catch (error) {
+    console.error("Error during authentication, redirecting user back to ", config.FRONTEND_HOST)
+    res.redirect(`${config.FRONTEND_HOST}?token=${encodeURIComponent("__invalid__AUTH_ERROR")}`)
+  }
 })
 
 let prevCode = ""
@@ -72,7 +80,7 @@ app.get("/getToken", async (req: Request, res: Response) => {
     const userAuth = await auth({
       type: "oauth-user",
       code: code as string,
-      state: "myUniqueState12138",
+      state: config.GITHUB_OAUTH_UNIQUE_STATE,
     })
 
     res.status(200).json({
@@ -90,7 +98,7 @@ app.get("/getToken/dev", (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     data: {
-      token: "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",
+      token: process.env.GITHUB_OAUTH_TOKEN_DEV,
     },
   })
 })
