@@ -1,4 +1,5 @@
 import { createOAuthAppAuth } from "@octokit/auth-oauth-app"
+import bodyParser from "body-parser"
 import cors from "cors"
 import express, { Request, Response } from "express"
 import morgan from "morgan"
@@ -13,6 +14,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 app.use(morgan("tiny"))
+app.use(bodyParser.urlencoded({ extended: false })) // parse application/x-www-form-urlencoded
+app.use(bodyParser.json())
 
 const auth = createOAuthAppAuth({
   clientType: "oauth-app",
