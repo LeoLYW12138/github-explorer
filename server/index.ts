@@ -1,7 +1,7 @@
 import { createOAuthAppAuth } from "@octokit/auth-oauth-app"
 import cors from "cors"
-import type { Request, Response } from "express"
-import express from "express"
+import express, { Request, Response } from "express"
+import morgan from "morgan"
 import config from "./config"
 
 const app = express()
@@ -12,6 +12,7 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions))
+app.use(morgan("tiny"))
 
 const auth = createOAuthAppAuth({
   clientType: "oauth-app",
@@ -41,24 +42,29 @@ app.get("/signIn/callback", async (req: Request, res: Response) => {
     state: "myUniqueState12138",
   })
 
-  res.status(200).send({
-    ok: true,
+  res.status(200).json({
+    success: true,
     data: {
       token: userAuthFromWebFlow.token,
     },
   })
 })
 
+let prevCode = ""
 app.get("/getToken", async (req: Request, res: Response) => {
   const { code } = req.query
-  console.log(code)
+
+  // skip if got called with same code consecutively
+  if (prevCode === code) return
+
   if (!code) {
-    res.status(400).send({
-      ok: false,
+    return res.status(400).json({
+      success: false,
       error: "Error: no code is provided",
     })
   }
 
+  prevCode = code as string
   try {
     const userAuth = await auth({
       type: "oauth-user",
@@ -66,15 +72,24 @@ app.get("/getToken", async (req: Request, res: Response) => {
       state: "myUniqueState12138",
     })
 
-    res.status(200).send({
-      ok: true,
+    res.status(200).json({
+      success: true,
       data: {
         token: userAuth.token,
       },
     })
-  } catch (err) {
-    res.status(400).send({ ok: false, err })
+  } catch (error) {
+    res.status(400).json({ success: false, error })
   }
+})
+
+app.get("/getToken/dev", (req: Request, res: Response) => {
+  res.status(200).json({
+    success: true,
+    data: {
+      token: "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",
+    },
+  })
 })
 
 app.listen(config.PORT, () => {
