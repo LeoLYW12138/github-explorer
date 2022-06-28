@@ -9,7 +9,7 @@ function Intro() {
     <section className={styles.section}>
       <div className={styles.container}>
         <div className={styles["logo-container"]}>
-          <img src="/logo.png" className={styles.logo} alt="logo of Github User Explorer" />
+          <img src="/logo.svg" className={styles.logo} alt="logo of Github User Explorer" />
         </div>
         <main className={styles["main-container"]}>
           <h1 className={styles.title}>Github User Explorer</h1>
