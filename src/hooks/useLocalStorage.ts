@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react"
 
-export const getLocalStorage = (key: string) => JSON.parse(localStorage.getItem(key) ?? "")
-export const setLocalStorage = (key: string, value: any) =>
+export const getLocalStorage = (key: string) => JSON.parse(localStorage.getItem(key) ?? "null")
+export const setLocalStorage = (key: string, value: any) => {
+  console.log("setting storage", key, value)
   localStorage.setItem(key, JSON.stringify(value))
+}
 
 export const delLocalStorage = (key: string | null = null) => {
   key !== null ? localStorage.removeItem(key) : localStorage.clear()
@@ -20,7 +22,7 @@ const isEmptyObjectLike = (value: unknown) => {
   return false
 }
 
-export default function useLocalStorage<T>(key: string, initialState: T) {
+export function useLocalStorage<T>(key: string, initialState: T) {
   const [state, setState] = useState(() => getLocalStorage(key) ?? initialState)
 
   useEffect(() => {
@@ -30,4 +32,6 @@ export default function useLocalStorage<T>(key: string, initialState: T) {
     }
     setLocalStorage(key, state)
   }, [state, setState])
+
+  return [state, setState] as const
 }

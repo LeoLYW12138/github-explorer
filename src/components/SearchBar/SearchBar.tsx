@@ -22,13 +22,6 @@ const SearchBar = () => {
 
   return (
     <div className={styles.searchBar}>
-      <a
-        href={`https://github.com/login/oauth/authorize?client_id=${
-          import.meta.env.VITE_GITHUB_OAUTH_CLIENT_ID
-        }&redirect_uri=${window.location}signIn/callback&scope=repo,user`}
-      >
-        Sign in with Github
-      </a>
       <SearchInput
         id="github-username"
         name="github-username"
