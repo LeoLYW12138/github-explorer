@@ -3,16 +3,17 @@ import styles from "./Button.module.css"
 
 interface ButtonProps {
   className?: string
-  link?: string | null
+  link?: string
+  newTab?: boolean
   children: React.ReactNode
 }
 
-function Button({ className = "", link = null, children }: ButtonProps) {
+function Button({ className = "", link, newTab = true, children }: ButtonProps) {
   if (link)
     return (
       <a
         href={link}
-        target="_blank"
+        target={newTab ? "_blank" : "_self"}
         rel="noopener noreferrer"
         className={`${styles.button} ${className}`}
       >
