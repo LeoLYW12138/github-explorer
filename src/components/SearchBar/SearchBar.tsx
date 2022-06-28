@@ -32,6 +32,7 @@ const SearchBar = () => {
       />
       <Dropdown
         className={styles["dropdown-sort"]}
+        iconType="sort"
         options={sortOptions}
         defaultOption={sortOptions[0]}
         desc="Sort by"
@@ -39,6 +40,7 @@ const SearchBar = () => {
       ></Dropdown>
       <Dropdown
         className={styles["dropdown-repo"]}
+        iconType="number"
         options={numInPageOptions}
         defaultOption={numInPageOptions[0]}
         suffix=" repos"

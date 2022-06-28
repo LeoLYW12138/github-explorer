@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from "react"
 
 import { useClickOutside } from "@/hooks"
+import { ReactComponent as IconSelect } from "@/icons/IconSelect.svg"
 import { ReactComponent as IconSort } from "@/icons/IconSort.svg"
 import styles from "./Dropdown.module.css"
 
@@ -23,6 +24,7 @@ export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>
   desc?: string
   prefix?: string
   suffix?: string
+  iconType?: "sort" | "number" | "text"
   onSelect?: (option: option) => void
 }
 
@@ -47,6 +49,7 @@ function Dropdown({
   prefix = "",
   suffix = "",
   className,
+  iconType = "text",
   onSelect,
   ...rest
 }: DropdownProps) {
@@ -102,7 +105,11 @@ function Dropdown({
         }}
       >
         <span className={styles.placeholder}>{displayName}</span>
-        <IconSort className={`${styles.icon} ${isOpen && styles.open}`} />
+        {iconType === "sort" ? (
+          <IconSort className={`${styles.icon} ${isOpen && styles.open}`} />
+        ) : (
+          <IconSelect className={`${styles.icon} ${isOpen && styles.open}`} />
+        )}
       </div>
 
       {/* dropdown options */}
