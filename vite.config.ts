@@ -18,4 +18,14 @@ export default defineConfig({
       "node-fetch": "isomorphic-fetch",
     },
   },
+  css: {
+    modules: {
+      generateScopedName(name, filename, css) {
+        const nameRegex = /.*\/(\w+).module.css/
+        const componentName = filename.match(nameRegex)[1]
+        const hash = Buffer.from(css).toString("base64").substring(0, 5)
+        return `_${componentName}_${name}_${hash}`
+      },
+    },
+  },
 })
