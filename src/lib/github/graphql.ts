@@ -20,7 +20,10 @@ export interface Repository {
   createdAt: string
   updatedAt: string
   diskUsage: number // in kb
-  refs: {
+  branches: {
+    totalCount: number
+  }
+  tags: {
     totalCount: number
   }
   languages: {
@@ -139,7 +142,10 @@ query repositories($username: String!, $firstNRepo: Int = 10) {
           nameWithOwner
           url
         }
-        refs(refPrefix: "refs/tags/") {
+        branches: refs(refPrefix: "refs/heads/") {
+          totalCount
+        }
+        tags: refs(refPrefix: "refs/tags/") {
           totalCount
         }
         languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {

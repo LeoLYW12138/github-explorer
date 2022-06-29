@@ -25,8 +25,8 @@ function RepoCard({ repo }: RepoCardProps) {
           >
             <h3 className={styles.name}>{repo.name}</h3>
           </a>
-          <IconWord icon={<IconBranch />} text={``}></IconWord>
-          <IconWord icon={<IconTag />} text={`${repo.refs.totalCount} tags`}></IconWord>
+          <IconWord icon={<IconBranch />} text={`${repo.branches.totalCount}`}></IconWord>
+          <IconWord icon={<IconTag />} text={`${repo.tags.totalCount} tags`}></IconWord>
           <IconWord icon={<IconEarth />} text={repo.isPrivate ? "private" : "public"}></IconWord>
         </div>
         {repo.parent && (
