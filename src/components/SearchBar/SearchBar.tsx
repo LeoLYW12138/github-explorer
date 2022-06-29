@@ -24,6 +24,13 @@ const SearchBar = () => {
     { id: useId(), value: 30 },
   ]
 
+  const handleSubmit = async () => {
+    const res = await getRepos("", username)
+    if (!res) return
+    const { repositories, rateLimit } = res
+    console.log(repositories, rateLimit)
+  }
+
   return (
     <div className={styles.searchBar}>
       <SearchInput
@@ -32,7 +39,7 @@ const SearchBar = () => {
         placeholder="Search User"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
-        onSubmit={() => getRepos("", username)}
+        onSubmit={handleSubmit}
       />
       <Dropdown
         className={styles["dropdown-sort"]}

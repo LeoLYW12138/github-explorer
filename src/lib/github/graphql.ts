@@ -1,8 +1,3 @@
-export interface Language {
-  name: string
-  color: string
-  percentage: number
-}
 export interface Repository {
   id: string
   name: string
@@ -38,6 +33,20 @@ export interface Repository {
   }
 }
 
+export interface LanguagesRawData {
+  edges: { size: number }[]
+  nodes: {
+    name: string
+    color: string
+  }[]
+  totalSize: number
+}
+
+export interface Language {
+  name: string
+  color: string
+  percentage: number
+}
 export interface RateLimit {
   cost: number
   limit: number
@@ -45,8 +54,14 @@ export interface RateLimit {
   resetAt: string
 }
 
+export interface User {
+  avatarUrl: string
+  login: string
+}
+
 // https://github.com/atrincas/github-language-usage/blob/master/src/index.ts
-export const languageQuery = `query($user: String!, $repos: Int!) {
+export const languageQuery = `
+query($user: String!, $repos: Int!) {
   user(login: $user) {
     repositories(first: $repos) {
       nodes {
@@ -86,7 +101,17 @@ query repositories($username: String!, $firstNRepo: Int = 10) {
 }
 `
 
-export const repoQuery = `query repositories($username: String!, $firstNRepo: Int = 10) {
+export interface GqlRepositoryReponse {
+  user: {
+    repositories: {
+      nodes: Repository[]
+    }
+  }
+  rateLimit: RateLimit
+}
+
+export const repoQuery = `
+query repositories($username: String!, $firstNRepo: Int = 10) {
   user(login: $username) {
     repositories(first: $firstNRepo, orderBy: {field: UPDATED_AT, direction: DESC}) {
       nodes {
@@ -133,4 +158,10 @@ export const repoQuery = `query repositories($username: String!, $firstNRepo: In
     remaining
     resetAt
   }
+}`
+
+const userQuery = `
+viewer {
+  avatarUrl
+  login
 }`
