@@ -1,23 +1,27 @@
 import { useId, useState } from "react"
 
 import type { options } from "@/components/Dropdown"
+import { getRepos } from "@/lib/github"
 import Dropdown from "../Dropdown"
 import styles from "./SearchBar.module.css"
 import SearchInput from "./SearchInput"
 
 const SearchBar = () => {
   const [username, setUsername] = useState("")
-  const sortOptions: options = [
+  const [sortBy, setSortBy] = useState("")
+  const [numRepo, setNumRepo] = useState(0)
+
+  const sortOptions: options<string> = [
     { id: useId(), name: "Name", value: "name" },
     { id: useId(), name: "Last update", value: "last-update" },
     { id: useId(), name: "Stars", value: "stars" },
     { id: useId(), name: "Forks", value: "forks" },
   ]
-  const numInPageOptions: options = [
-    { id: useId(), name: "5", value: "5" },
-    { id: useId(), name: "10", value: "10" },
-    { id: useId(), name: "20", value: "20" },
-    { id: useId(), name: "30", value: "30" },
+  const numInPageOptions: options<number> = [
+    { id: useId(), value: 5 },
+    { id: useId(), value: 10 },
+    { id: useId(), value: 20 },
+    { id: useId(), value: 30 },
   ]
 
   return (
@@ -28,7 +32,7 @@ const SearchBar = () => {
         placeholder="Search User"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
-        onSubmit={() => console.log(username)}
+        onSubmit={() => getRepos("", username)}
       />
       <Dropdown
         className={styles["dropdown-sort"]}
@@ -36,15 +40,16 @@ const SearchBar = () => {
         options={sortOptions}
         defaultOption={sortOptions[0]}
         desc="Sort by"
-        onSelect={(option) => console.log(option.name)}
+        onSelect={(option) => setSortBy(option.value)}
       ></Dropdown>
       <Dropdown
         className={styles["dropdown-repo"]}
         iconType="number"
         options={numInPageOptions}
-        defaultOption={numInPageOptions[0]}
+        defaultOption={numInPageOptions[1]}
         suffix=" repos"
         desc="# Repo in one page"
+        onSelect={(option) => setNumRepo(option.value)}
       ></Dropdown>
     </div>
   )

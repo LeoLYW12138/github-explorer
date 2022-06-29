@@ -1,16 +1,24 @@
 import { graphql, GraphqlResponseError } from "@octokit/graphql"
 import { repoQuery } from "./graphql"
+import { data as repoSample } from "./repoSampleData.json"
 
-export const getRepos = async (username: string, firstNRepo = 10) => {
+const useDummy = true
+
+export const getRepos = async (token: string, username: string, firstNRepo = 10) => {
   try {
-    const result = await graphql({
-      query: repoQuery,
-      username,
-      firstNRepo,
-      headers: {
-        authorization: "Bearer " + import.meta.env.VITE_GITHUB_TOKEN,
-      },
-    })
+    let result
+    if (useDummy) {
+      result = repoSample
+    } else
+      result = await graphql({
+        query: repoQuery,
+        username,
+        firstNRepo,
+        headers: {
+          authorization: "bearer " + import.meta.env.VITE_GITHUB_TOKEN,
+        },
+      })
+
     console.log(result)
     return result
   } catch (error) {

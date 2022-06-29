@@ -1,34 +1,34 @@
-import { useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 
 import { useClickOutside } from "@/hooks"
 import { ReactComponent as IconSelect } from "@/icons/IconSelect.svg"
 import { ReactComponent as IconSort } from "@/icons/IconSort.svg"
 import styles from "./Dropdown.module.css"
 
-export type option = {
+export type option<T> = {
   id: string
   name?: string
-  value: string | number
+  value: T
 }
-export type options = option[]
+export type options<T> = option<T>[]
 
-interface DropdownItemProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onClick"> {
-  option: option
+interface DropdownItemProps<T> extends Omit<React.HTMLAttributes<HTMLDivElement>, "onClick"> {
+  option: option<T>
   onClick: () => void
 }
 
-export interface DropdownProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> {
-  options: option[]
-  defaultOption?: option
+export interface DropdownProps<T> extends Omit<React.HTMLAttributes<HTMLDivElement>, "onSelect"> {
+  options: options<T>
+  defaultOption?: option<T>
   placeholder?: string
   desc?: string
   prefix?: string
   suffix?: string
   iconType?: "sort" | "number" | "text"
-  onSelect?: (option: option) => void
+  onSelect?: (option: option<T>) => void
 }
 
-export function DropdownItem({ option, onClick, className, ...rest }: DropdownItemProps) {
+export function DropdownItem<T>({ option, onClick, className, ...rest }: DropdownItemProps<T>) {
   return (
     <div
       role="option"
@@ -41,7 +41,7 @@ export function DropdownItem({ option, onClick, className, ...rest }: DropdownIt
   )
 }
 
-function Dropdown({
+function Dropdown<T>({
   options,
   defaultOption,
   placeholder = " ",
@@ -52,15 +52,28 @@ function Dropdown({
   iconType = "text",
   onSelect,
   ...rest
-}: DropdownProps) {
+}: DropdownProps<T>) {
   const [isOpen, setIsOpen] = useState(false)
+
   const items = useMemo(() => {
     return options.reduce((currArr, { id, name, value }) => {
       currArr.push({ id, name: name ?? String(value), value })
       return currArr
-    }, [] as options)
+    }, [] as options<T>)
   }, [])
-  const [selected, setSelected] = useState<option | null>(defaultOption ?? null)
+
+  const [selected, setSelected] = useState<option<T> | null>(() => {
+    if (!defaultOption) return null
+    return defaultOption.name
+      ? defaultOption
+      : { ...defaultOption, name: String(defaultOption.value) }
+  })
+
+  // update the state in the parent
+  useEffect(() => {
+    if (selected) onSelect && onSelect(selected)
+  }, [])
+
   const boxRef = useRef<HTMLDivElement>(null)
   const optionListRef = useRef<HTMLDivElement>(null)
   const clickOutsideRef = useClickOutside<HTMLDivElement>(() => setIsOpen(false))
@@ -82,7 +95,7 @@ function Dropdown({
     )
   }, [items])
 
-  const handleItemClick = (item: option) => {
+  const handleItemClick = (item: option<T>) => {
     setSelected(item)
     setIsOpen(false)
     onSelect && onSelect(item)
