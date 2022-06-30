@@ -9,7 +9,7 @@ interface IconWordProps {
 function IconWord({ icon, text }: IconWordProps) {
   return (
     <div className={styles.container}>
-      <span className={styles.icon}>{icon}</span>
+      {icon}
       <span className={styles.text}>{text}</span>
     </div>
   )

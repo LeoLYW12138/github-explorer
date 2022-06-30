@@ -1,8 +1,8 @@
-import SearchBar from "@/components/SearchBar"
 import { useLocalStorage } from "@/hooks"
 import { useLayoutEffect } from "react"
 import { useSearchParams } from "react-router-dom"
 import TokenAbsence from "../TokenAbsence"
+import Content from "./Content"
 import styles from "./Main.module.css"
 
 function Main() {
@@ -25,7 +25,7 @@ function Main() {
         {token === null && tokenInvalid ? (
           <TokenAbsence token={token}></TokenAbsence>
         ) : (
-          <SearchBar></SearchBar>
+          <Content token={token}></Content>
         )}
       </div>
     </main>

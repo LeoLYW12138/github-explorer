@@ -1,10 +1,12 @@
 import { ReactComponent as IconBranch } from "@/icons/IconBranch.svg"
+import { ReactComponent as IconClock } from "@/icons/IconClock.svg"
 import { ReactComponent as IconEarth } from "@/icons/IconEarth.svg"
-import { ReactComponent as IconClock, ReactComponent as IconFork } from "@/icons/IconFork.svg"
+import { ReactComponent as IconFork } from "@/icons/IconFork.svg"
 import { ReactComponent as IconLicense } from "@/icons/IconLicense.svg"
 import { ReactComponent as IconStar } from "@/icons/IconStar.svg"
 import { ReactComponent as IconTag } from "@/icons/IconTag.svg"
 import { Repository } from "@/lib/github"
+import { format } from "timeago.js"
 import IconWord from "./IconWord"
 import styles from "./RepoCard.module.css"
 
@@ -25,9 +27,11 @@ function RepoCard({ repo }: RepoCardProps) {
           >
             <h3 className={styles.name}>{repo.name}</h3>
           </a>
-          <IconWord icon={<IconBranch />} text={`${repo.branches.totalCount}`}></IconWord>
-          <IconWord icon={<IconTag />} text={`${repo.tags.totalCount} tags`}></IconWord>
-          <IconWord icon={<IconEarth />} text={repo.isPrivate ? "private" : "public"}></IconWord>
+          <div className={styles["head-icons"]}>
+            <IconWord icon={<IconBranch />} text={`${repo.branches.totalCount}`}></IconWord>
+            <IconWord icon={<IconTag />} text={`${repo.tags.totalCount} tags`}></IconWord>
+            <IconWord icon={<IconEarth />} text={repo.isPrivate ? "private" : "public"}></IconWord>
+          </div>
         </div>
         {repo.parent && (
           <p className={styles.forkFrom}>
@@ -44,15 +48,32 @@ function RepoCard({ repo }: RepoCardProps) {
         )}
       </header>
       <p className={styles.desc}>{repo.description}</p>
-      <footer className={styles.foooter}>
+      <footer className={styles.footer}>
         <div className={styles["foot-meta"]}>
-          <IconWord icon={<IconLicense />} text={repo.licenseInfo?.spdxId ?? "none"}></IconWord>
+          {repo.licenseInfo && (
+            <IconWord icon={<IconLicense />} text={repo.licenseInfo.spdxId ?? "none"}></IconWord>
+          )}
           <IconWord icon={<IconStar />} text={`${repo.stargazerCount}`}></IconWord>
           <IconWord icon={<IconFork />} text={`${repo.forkCount}`}></IconWord>
-          <IconWord icon={<IconClock />} text={`Last update: ${repo.updatedAt}`}></IconWord>
+          <IconWord
+            icon={<IconClock />}
+            text={`Last update: ${format(new Date(repo.pushedAt))}`}
+          ></IconWord>
         </div>
         {/* placeholder for languages */}
-        <span>Created at {repo.createdAt}</span>
+        <div className={styles.created}>
+          <span>
+            Created at{" "}
+            {new Date(repo.createdAt).toLocaleString("en-uk", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+              timeZoneName: "shortOffset",
+            })}
+          </span>
+        </div>
       </footer>
     </article>
   )

@@ -18,7 +18,7 @@ export interface Repository {
   isPrivate: boolean
   stargazerCount: number
   createdAt: string
-  updatedAt: string
+  pushedAt: string
   diskUsage: number // in kb
   branches: {
     totalCount: number
@@ -36,7 +36,7 @@ export interface Repository {
   }
   licenseInfo: {
     spdxId: string
-  }
+  } | null
 }
 
 export interface LanguagesRawData {
@@ -134,7 +134,7 @@ query repositories($username: String!, $firstNRepo: Int = 10) {
         }
         createdAt
         stargazerCount
-        updatedAt
+        pushedAt
         url
         diskUsage
         id

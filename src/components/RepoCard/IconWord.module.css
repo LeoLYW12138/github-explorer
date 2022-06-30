@@ -1,2 +1,10 @@
 .container {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375em;
+  min-width: max-content;
+}
+
+.text {
+  font-size: inherit;
 }

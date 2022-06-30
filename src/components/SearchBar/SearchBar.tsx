@@ -1,12 +1,20 @@
 import { useId, useState } from "react"
 
 import type { options } from "@/components/Dropdown"
-import { getRepos } from "@/lib/github"
 import Dropdown from "../Dropdown"
 import styles from "./SearchBar.module.css"
 import SearchInput from "./SearchInput"
 
-const SearchBar = () => {
+export type Fields = {
+  username: string
+  sortBy: string
+  numRepo: number
+}
+interface SearchBarProps {
+  onSubmit: (fields: Fields) => void
+}
+
+const SearchBar = ({ onSubmit }: SearchBarProps) => {
   const [username, setUsername] = useState("")
   const [sortBy, setSortBy] = useState("")
   const [numRepo, setNumRepo] = useState(0)
@@ -24,11 +32,8 @@ const SearchBar = () => {
     { id: useId(), value: 30 },
   ]
 
-  const handleSubmit = async () => {
-    const res = await getRepos("", username)
-    if (!res) return
-    const { repositories, rateLimit } = res
-    console.log(repositories, rateLimit)
+  const handleSubmit = () => {
+    onSubmit({ username, sortBy, numRepo })
   }
 
   return (
