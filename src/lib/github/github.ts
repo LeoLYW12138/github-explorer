@@ -9,7 +9,7 @@ import {
 } from "./graphql"
 import * as repoSample from "./repoSampleData.json"
 
-const useDummy = true
+const useDummy = false
 
 export const getRepos = async (token: string, username: string, firstNRepo = 10) => {
   try {

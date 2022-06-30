@@ -116,6 +116,17 @@ export interface GqlRepositoryReponse {
   rateLimit: RateLimit
 }
 
+export enum SortOptions {
+  LAST_UPDATE = "PUSHED_AT",
+  NAME = "NAME",
+  STAR = "STARGAZERS",
+}
+
+export enum SortDirections {
+  ASC = "ASC",
+  DSC = "DESC",
+}
+
 export const repoQuery = `
 query repositories($username: String!, $firstNRepo: Int = 10) {
   user(login: $username) {

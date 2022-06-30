@@ -97,7 +97,7 @@ function RepoCard({ repo }: RepoCardProps) {
             text={`Last update: ${format(new Date(repo.pushedAt))}`}
           ></IconWord>
         </div>
-        <LanguageBar languages={languages}></LanguageBar>
+        {languages.length !== 0 && <LanguageBar languages={languages}></LanguageBar>}
         <p className={styles.created} aria-label="Repository create time">
           Created at{" "}
           {new Date(repo.createdAt).toLocaleString("en-uk", {

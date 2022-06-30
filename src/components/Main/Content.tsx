@@ -14,7 +14,7 @@ function Content({ token }: ContentProps) {
   const [rateLimit, setRateLimit] = useState({} as RateLimit)
 
   const handleSubmit = async ({ username, sortBy, numRepo }: Fields) => {
-    const res = await getRepos("", username)
+    const res = await getRepos(token, username, numRepo)
     if (!res) return
     const { repositories, rateLimit } = res
     setRepos(repositories)
