@@ -1,3 +1,4 @@
+import LanguageBar from "@/components/LanguageBar"
 import { ReactComponent as IconBranch } from "@/icons/IconBranch.svg"
 import { ReactComponent as IconClock } from "@/icons/IconClock.svg"
 import { ReactComponent as IconEarth } from "@/icons/IconEarth.svg"
@@ -5,7 +6,8 @@ import { ReactComponent as IconFork } from "@/icons/IconFork.svg"
 import { ReactComponent as IconLicense } from "@/icons/IconLicense.svg"
 import { ReactComponent as IconStar } from "@/icons/IconStar.svg"
 import { ReactComponent as IconTag } from "@/icons/IconTag.svg"
-import { Repository } from "@/lib/github"
+import { processLanguages, Repository } from "@/lib/github"
+import { useMemo } from "react"
 import { format } from "timeago.js"
 import IconWord from "./IconWord"
 import styles from "./RepoCard.module.css"
@@ -15,6 +17,8 @@ interface RepoCardProps {
 }
 
 function RepoCard({ repo }: RepoCardProps) {
+  const languages = useMemo(() => processLanguages(repo.languages), [repo])
+
   return (
     <article className={styles.card}>
       <header className={styles.header}>
@@ -93,20 +97,18 @@ function RepoCard({ repo }: RepoCardProps) {
             text={`Last update: ${format(new Date(repo.pushedAt))}`}
           ></IconWord>
         </div>
-        {/* placeholder for languages */}
-        <div className={styles.created}>
-          <span aria-label="Repository create time">
-            Created at{" "}
-            {new Date(repo.createdAt).toLocaleString("en-uk", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-              timeZoneName: "shortOffset",
-            })}
-          </span>
-        </div>
+        <LanguageBar languages={languages}></LanguageBar>
+        <p className={styles.created} aria-label="Repository create time">
+          Created at{" "}
+          {new Date(repo.createdAt).toLocaleString("en-uk", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "numeric",
+            timeZoneName: "shortOffset",
+          })}
+        </p>
       </footer>
     </article>
   )
