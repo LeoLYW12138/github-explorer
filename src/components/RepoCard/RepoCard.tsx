@@ -20,23 +20,43 @@ function RepoCard({ repo }: RepoCardProps) {
       <header className={styles.header}>
         <div className={styles["head-meta"]}>
           <a
+            title="Link to Repository"
+            aria-label="Link to Repository"
             className={styles["name-link"]}
             href={repo.url}
             rel="noopener noreferrer"
             target="_blank"
           >
-            <h3 className={styles.name}>{repo.name}</h3>
+            <h3 aria-label="Repository name" className={styles.name}>
+              {repo.name}
+            </h3>
           </a>
           <div className={styles["head-icons"]}>
-            <IconWord icon={<IconBranch />} text={`${repo.branches.totalCount}`}></IconWord>
-            <IconWord icon={<IconTag />} text={`${repo.tags.totalCount} tags`}></IconWord>
-            <IconWord icon={<IconEarth />} text={repo.isPrivate ? "private" : "public"}></IconWord>
+            <IconWord
+              title="Branch count"
+              aria-label="Branch count"
+              icon={<IconBranch />}
+              text={`${repo.branches.totalCount}`}
+            ></IconWord>
+            <IconWord
+              title="Tag count"
+              aria-label="Tag count"
+              icon={<IconTag />}
+              text={`${repo.tags.totalCount} tags`}
+            ></IconWord>
+            <IconWord
+              aria-label="Repository visibility"
+              icon={<IconEarth />}
+              text={repo.isPrivate ? "private" : "public"}
+            ></IconWord>
           </div>
         </div>
         {repo.parent && (
-          <p className={styles.forkFrom}>
+          <p aria-label="Parent repository" className={styles.forkFrom}>
             Fork from{" "}
             <a
+              title="Link to parent repository"
+              aria-label="Link to parent repository"
               className={styles["parent-link"]}
               href={repo.parent.url}
               rel="noopener noreferrer"
@@ -47,22 +67,35 @@ function RepoCard({ repo }: RepoCardProps) {
           </p>
         )}
       </header>
-      <p className={styles.desc}>{repo.description}</p>
+      <p aria-label="Repository description" className={styles.desc}>
+        {repo.description}
+      </p>
       <footer className={styles.footer}>
         <div className={styles["foot-meta"]}>
           {repo.licenseInfo && (
-            <IconWord icon={<IconLicense />} text={repo.licenseInfo.spdxId ?? "none"}></IconWord>
+            <IconWord
+              aria-label="License info"
+              title="License info"
+              icon={<IconLicense />}
+              text={repo.licenseInfo.spdxId ?? "none"}
+            ></IconWord>
           )}
-          <IconWord icon={<IconStar />} text={`${repo.stargazerCount}`}></IconWord>
-          <IconWord icon={<IconFork />} text={`${repo.forkCount}`}></IconWord>
           <IconWord
+            aria-label="Star count"
+            title="Star count"
+            icon={<IconStar />}
+            text={`${repo.stargazerCount}`}
+          ></IconWord>
+          <IconWord title="Fork count" icon={<IconFork />} text={`${repo.forkCount}`}></IconWord>
+          <IconWord
+            aria-label="Last update time"
             icon={<IconClock />}
             text={`Last update: ${format(new Date(repo.pushedAt))}`}
           ></IconWord>
         </div>
         {/* placeholder for languages */}
         <div className={styles.created}>
-          <span>
+          <span aria-label="Repository create time">
             Created at{" "}
             {new Date(repo.createdAt).toLocaleString("en-uk", {
               year: "numeric",

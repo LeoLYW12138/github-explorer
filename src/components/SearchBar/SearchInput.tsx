@@ -5,16 +5,13 @@ import { ReactComponent as IconCancel } from "@/icons/IconCancel.svg"
 import { ReactComponent as IconSearch } from "@/icons/IconSearch.svg"
 import styles from "./SearchInput.module.css"
 
-export interface SearchInputProps {
+export interface SearchInputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onSubmit"> {
   onSubmit?: React.FormEventHandler<HTMLFormElement>
   shortcutKey?: readonly string[]
 }
 
-const SearchInput = ({
-  onSubmit,
-  shortcutKey = ["Control", "k"],
-  ...rest
-}: SearchInputProps & React.InputHTMLAttributes<HTMLInputElement>) => {
+const SearchInput = ({ onSubmit, shortcutKey = ["Control", "k"], ...rest }: SearchInputProps) => {
   const searchInput = useRef<HTMLInputElement>(null)
   useKeyPress(
     shortcutKey,
