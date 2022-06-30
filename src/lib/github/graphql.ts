@@ -172,7 +172,7 @@ query repositories($username: String!, $firstNRepo: Int = 10) {
   }
 }`
 
-const userQuery = `
+export const userQuery = `
 viewer {
   avatarUrl
   login
