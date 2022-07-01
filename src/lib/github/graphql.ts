@@ -145,9 +145,9 @@ query repositories($username: String!, $sortBy: RepositoryOrder!, $firstNRepo: I
         isFork
         forkCount
         isPrivate
-        collaborators {
-          totalCount
-        }
+        # collaborators {
+        #  totalCount
+        #}
         createdAt
         stargazerCount
         pushedAt

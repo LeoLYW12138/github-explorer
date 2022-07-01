@@ -8,9 +8,11 @@
 }
 
 .repo-list {
-  max-width: max-content;
+  max-width: 800px;
   margin: 3rem auto;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
+
   gap: 1rem;
 }
