@@ -6,12 +6,18 @@ import {
   RateLimit,
   repoQuery,
   Repository,
+  SortArgs,
 } from "./graphql"
 import * as repoSample from "./repoSampleData.json"
 
 const useDummy = false
 
-export const getRepos = async (token: string, username: string, firstNRepo = 10) => {
+export const getRepos = async (
+  token: string,
+  username: string,
+  sortBy: SortArgs,
+  firstNRepo = 10
+) => {
   try {
     let result
     if (useDummy) {
@@ -20,9 +26,10 @@ export const getRepos = async (token: string, username: string, firstNRepo = 10)
       result = await graphql<GqlRepositoryReponse>({
         query: repoQuery,
         username,
+        sortBy,
         firstNRepo,
         headers: {
-          authorization: "bearer " + import.meta.env.VITE_GITHUB_TOKEN,
+          authorization: "bearer " + token,
         },
       })
     return {

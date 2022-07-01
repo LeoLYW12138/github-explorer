@@ -1,6 +1,7 @@
 import { useId, useState } from "react"
 
 import type { options } from "@/components/Dropdown"
+import { SortOptions } from "@/lib/github"
 import Dropdown from "../Dropdown"
 import styles from "./SearchBar.module.css"
 import SearchInput from "./SearchInput"
@@ -20,9 +21,9 @@ const SearchBar = ({ onSubmit }: SearchBarProps) => {
   const [numRepo, setNumRepo] = useState(0)
 
   const sortOptions: options<string> = [
-    { id: useId(), name: "Name", value: "name" },
-    { id: useId(), name: "Last update", value: "last-update" },
-    { id: useId(), name: "Stars", value: "stars" },
+    { id: useId(), name: "Name", value: SortOptions.NAME },
+    { id: useId(), name: "Last update", value: SortOptions.LAST_UPDATE },
+    { id: useId(), name: "Stars", value: SortOptions.STAR },
     { id: useId(), name: "Forks", value: "forks" },
   ]
   const numInPageOptions: options<number> = [

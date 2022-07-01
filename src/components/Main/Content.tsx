@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import { getRepos, RateLimit, Repository } from "@/lib/github"
+import { getRepos, RateLimit, Repository, SortDirections } from "@/lib/github"
 import RepoCard from "../RepoCard"
 import SearchBar, { Fields } from "../SearchBar"
 import styles from "./Main.module.css"
@@ -14,7 +14,12 @@ function Content({ token }: ContentProps) {
   const [rateLimit, setRateLimit] = useState({} as RateLimit)
 
   const handleSubmit = async ({ username, sortBy, numRepo }: Fields) => {
-    const res = await getRepos(token, username, numRepo)
+    const res = await getRepos(
+      token,
+      username,
+      { field: sortBy, direction: SortDirections.DSC },
+      numRepo
+    )
     if (!res) return
     const { repositories, rateLimit } = res
     setRepos(repositories)

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 
 export const getLocalStorage = (key: string) => JSON.parse(localStorage.getItem(key) ?? "null")
 export const setLocalStorage = (key: string, value: any) => {
-  console.log("setting storage", key, value)
+  // console.log("setting storage", key, value)
   localStorage.setItem(key, JSON.stringify(value))
 }
 

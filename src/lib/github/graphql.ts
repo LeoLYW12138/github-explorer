@@ -127,10 +127,15 @@ export enum SortDirections {
   DSC = "DESC",
 }
 
+export interface SortArgs {
+  field: SortOptions | string // string is for custom sorting that GitHub API doesn't support natively
+  direction: SortDirections
+}
+
 export const repoQuery = `
-query repositories($username: String!, $firstNRepo: Int = 10) {
+query repositories($username: String!, $sortBy: RepositoryOrder!, $firstNRepo: Int = 10) {
   user(login: $username) {
-    repositories(first: $firstNRepo, orderBy: {field: UPDATED_AT, direction: DESC}) {
+    repositories(first: $firstNRepo, orderBy: $sortBy) {
       nodes {
         name
         owner {
