@@ -87,7 +87,7 @@
   }
 }
 
-@media (hover: any-hover) and (pointer: fine) {
+@media (hover: hover) and (pointer: fine) {
   .name-link:hover,
   .name-link:focus {
     outline: none;
