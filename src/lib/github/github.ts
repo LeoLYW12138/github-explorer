@@ -32,15 +32,24 @@ export const getRepos = async (
           authorization: "bearer " + token,
         },
       })
+
     return {
       repositories: result.user.repositories.nodes as Repository[],
       rateLimit: result.rateLimit as RateLimit,
     }
   } catch (error) {
     if (error instanceof GraphqlResponseError) {
-      console.error("Graphql error:", error.message)
+      console.error(error.message)
+      return {
+        repositories: error.data.user
+          ? (error.data.user.repositories.nodes as Repository[])
+          : undefined,
+        rateLimit: error.data.rateLimit ? (error.data.rateLimit as RateLimit) : undefined,
+        error: error.errors ? error.errors[0] : undefined,
+      }
     } else {
       console.error(error)
+      if (error instanceof Error) throw new Error(error.message)
     }
   }
 }

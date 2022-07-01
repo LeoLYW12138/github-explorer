@@ -7,6 +7,25 @@
   composes: container from "@/utils.module.css";
 }
 
+.error-container {
+  font-size: 0.875rem;
+  display: flex;
+  justify-content: center;
+}
+
+.error {
+  width: max-content;
+  padding: 0.75em 1.1em 0.75em 1.5em;
+  font-weight: 600;
+  color: white;
+  border-radius: 9999px;
+  background-color: var(--theme-color-error);
+
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
 .repo-list {
   max-width: 800px;
   margin: 3rem auto;
@@ -15,4 +34,10 @@
   align-items: stretch;
 
   gap: 1rem;
+}
+
+@media (min-width: 700px) {
+  .error-container {
+    font-size: 1rem;
+  }
 }

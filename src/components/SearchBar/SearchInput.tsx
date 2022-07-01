@@ -13,6 +13,8 @@ export interface SearchInputProps
 
 const SearchInput = ({ onSubmit, shortcutKey = ["Control", "k"], ...rest }: SearchInputProps) => {
   const searchInput = useRef<HTMLInputElement>(null)
+
+  // listen for keyboard shortcut
   useKeyPress(
     shortcutKey,
     () => {

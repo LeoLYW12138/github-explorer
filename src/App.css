@@ -5,11 +5,13 @@
   --theme-color-secondary: #90adc6;
   --theme-color-tertiary: #e9eaec;
   --theme-color-accent: #fad02c;
+  --theme-color-error: #fa452c;
 
   --theme-color-primary-rgb: 51, 54, 82;
   --theme-color-secondary-rgb: 144, 173, 198;
   --theme-color-tertiary-rgb: 233, 234, 236;
   --theme-color-accent-rgb: 250, 208, 44;
+  --theme-color-error-rgb: 250, 69, 44;
 }
 
 body {

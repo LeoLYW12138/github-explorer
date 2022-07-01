@@ -1,5 +1,6 @@
 .dropdown {
   position: relative;
+  z-index: 20;
   composes: shadow-sm from "@/utils.module.css";
 }
 
@@ -13,6 +14,7 @@
   padding: 0.5em 1em;
   cursor: pointer;
   user-select: none;
+  z-index: 1;
 }
 
 .icon {
