@@ -1,20 +1,17 @@
 .dropdown {
   position: relative;
-  z-index: 20;
   composes: shadow-sm from "@/utils.module.css";
+  z-index: 2;
 }
 
 .box {
   display: flex;
-  position: relative;
   align-items: center;
-  /* gap: 1em; */
   background-color: var(--theme-color-tertiary);
   border-radius: 9999px;
   padding: 0.5em 1em;
   cursor: pointer;
   user-select: none;
-  z-index: 1;
 }
 
 .icon {
@@ -43,6 +40,7 @@
 
   display: none;
   flex-direction: column;
+  z-index: 4;
 }
 
 .list.open {

@@ -188,6 +188,13 @@ query repositories($username: String!, $sortBy: RepositoryOrder!, $firstNRepo: I
   }
 }`
 
+export interface GqlUserReponse {
+  viewer: {
+    avatarUrl: string
+    login: string
+  }
+}
+
 export const userQuery = `
 viewer {
   avatarUrl

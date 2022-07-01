@@ -5,6 +5,10 @@
   flex-wrap: wrap;
 }
 
+.dropdown-sort {
+  z-index: 3;
+}
+
 @media (min-width: 1000px) {
   .searchBar {
     justify-content: center;
