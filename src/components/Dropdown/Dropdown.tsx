@@ -9,6 +9,7 @@ export type option<T> = {
   id: string
   name?: string
   value: T
+  disabled?: boolean
 }
 export type options<T> = option<T>[]
 
@@ -29,14 +30,19 @@ export interface DropdownProps<T> extends Omit<React.HTMLAttributes<HTMLDivEleme
 }
 
 export function DropdownItem<T>({ option, onClick, className, ...rest }: DropdownItemProps<T>) {
+  const { name, disabled } = option
   return (
     <div
+      tabIndex={disabled ? undefined : 0}
       role="option"
-      className={`${styles.item} ${className ? className : ""}`}
-      onClick={onClick}
+      aria-disabled={disabled}
+      className={`${styles.item} ${disabled ? styles.disabled : ""} ${
+        className ? className : ""
+      }`.trim()}
+      onClick={disabled ? undefined : onClick}
       {...rest}
     >
-      {option.name}
+      {name}
     </div>
   )
 }
@@ -56,8 +62,8 @@ function Dropdown<T>({
   const [isOpen, setIsOpen] = useState(false)
 
   const items = useMemo(() => {
-    return options.reduce((currArr, { id, name, value }) => {
-      currArr.push({ id, name: name ?? String(value), value })
+    return options.reduce((currArr, option) => {
+      currArr.push({ ...option, name: option.name ?? String(option.value) })
       return currArr
     }, [] as options<T>)
   }, [])
@@ -135,7 +141,6 @@ function Dropdown<T>({
         {items?.map((item, index) => (
           <DropdownItem
             key={item.id}
-            tabIndex={0}
             option={item}
             onClick={() => handleItemClick(item)}
             onKeyDown={(e) => {

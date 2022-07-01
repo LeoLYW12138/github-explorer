@@ -24,7 +24,7 @@ const SearchBar = ({ onSubmit }: SearchBarProps) => {
     { id: useId(), name: "Name", value: SortOptions.NAME },
     { id: useId(), name: "Last update", value: SortOptions.LAST_UPDATE },
     { id: useId(), name: "Stars", value: SortOptions.STAR },
-    { id: useId(), name: "Forks", value: "forks" },
+    { id: useId(), name: "Forks", value: "forks", disabled: true },
   ]
   const numInPageOptions: options<number> = [
     { id: useId(), value: 5 },

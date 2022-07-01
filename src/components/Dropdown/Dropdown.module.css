@@ -56,6 +56,12 @@
   background-color: rgba(var(--theme-color-accent-rgb), 0.5);
 }
 
+.disabled {
+  background-color: rgb(180, 180, 180) !important;
+  cursor: not-allowed;
+  user-select: none;
+}
+
 @media (min-width: 1000px) {
   .placeholder {
     font-size: 1.5rem;
