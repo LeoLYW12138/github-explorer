@@ -1,12 +1,15 @@
 import { graphql, GraphqlResponseError } from "@octokit/graphql"
 import {
   GqlRepositoryReponse,
+  GqlUserReponse,
   Language,
   LanguagesRawData,
   RateLimit,
   repoQuery,
   Repository,
   SortArgs,
+  User,
+  userQuery,
 } from "./graphql"
 import * as repoSample from "./repoSampleData.json"
 
@@ -40,11 +43,42 @@ export const getRepos = async (
   } catch (error) {
     if (error instanceof GraphqlResponseError) {
       console.error(error.message)
+
+      // get partial data if available
       return {
-        repositories: error.data.user
+        repositories: error.data?.user
           ? (error.data.user.repositories.nodes as Repository[])
           : undefined,
-        rateLimit: error.data.rateLimit ? (error.data.rateLimit as RateLimit) : undefined,
+        rateLimit: error.data?.rateLimit ? (error.data.rateLimit as RateLimit) : undefined,
+        error: error.errors ? error.errors[0] : undefined,
+      }
+    } else {
+      console.error(error)
+      if (error instanceof Error) throw new Error(error.message)
+    }
+  }
+}
+
+export const getUser = async (token: string) => {
+  try {
+    const result = await graphql<GqlUserReponse>({
+      query: userQuery,
+      headers: {
+        authorization: "bearer " + token,
+      },
+    })
+    return {
+      user: result.viewer as User,
+      rateLimit: result.rateLimit as RateLimit,
+    }
+  } catch (error) {
+    if (error instanceof GraphqlResponseError) {
+      console.error(error.message)
+
+      // get partial data if available
+      return {
+        user: error.data?.viewer ? (error.data.viewer as User) : undefined,
+        rateLimit: error.data?.rateLimit ? (error.data.rateLimit as RateLimit) : undefined,
         error: error.errors ? error.errors[0] : undefined,
       }
     } else {

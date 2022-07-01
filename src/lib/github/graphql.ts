@@ -65,27 +65,6 @@ export interface User {
   login: string
 }
 
-// https://github.com/atrincas/github-language-usage/blob/master/src/index.ts
-export const languageQuery = `
-query($user: String!, $repos: Int!) {
-  user(login: $user) {
-    repositories(first: $repos) {
-      nodes {
-        name
-        languages(first: 100) {
-          edges {
-            size
-          }
-          nodes {
-            name
-            color
-          }
-        }
-      }
-    }
-  }
-}`
-
 export const contentQuery = `
 query repositories($username: String!, $firstNRepo: Int = 10) {
   user(login: $username) {
@@ -193,10 +172,19 @@ export interface GqlUserReponse {
     avatarUrl: string
     login: string
   }
+  rateLimit: RateLimit
 }
 
 export const userQuery = `
-viewer {
-  avatarUrl
-  login
+query User {
+  viewer {
+    avatarUrl(size: 48)
+    login
+  }
+  rateLimit {
+    cost
+    limit
+    remaining
+    resetAt
+  }
 }`

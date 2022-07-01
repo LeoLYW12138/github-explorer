@@ -1,6 +1,6 @@
 import { useLocalStorage } from "@/hooks"
-import { User } from "@/lib/github"
-import { useLayoutEffect } from "react"
+import { getUser, User } from "@/lib/github"
+import { useEffect, useLayoutEffect, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import TokenAbsence from "../TokenAbsence"
 import UserCard from "../UserCard"
@@ -10,6 +10,7 @@ import styles from "./Main.module.css"
 function Main() {
   const [query, setQuery] = useSearchParams()
   const [token, setToken] = useLocalStorage("user-explorer:token", null)
+  const [user, setUser] = useState({} as User)
 
   let tokenInvalid = true
   useLayoutEffect(() => {
@@ -21,12 +22,18 @@ function Main() {
     setQuery({}, { replace: true })
   }, [query])
 
-  const handleSignOut = () => setToken(null)
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await getUser(token)
+      if (!res) return
+      const { user } = res
+      user && setUser(user)
+    }
 
-  const user: User = {
-    avatarUrl: "https://avatars.githubusercontent.com/u/52589810?s=48&v=4",
-    login: "LeoLYW12138",
-  }
+    fetchUser()
+  }, [token])
+
+  const handleSignOut = () => setToken(null)
 
   return (
     <main className={styles.main}>
