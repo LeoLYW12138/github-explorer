@@ -7,6 +7,9 @@ function App() {
     <>
       <Intro />
       <Main />
+      <footer className="footer">
+        <p>{new Date().getFullYear()} &copy; LeoLYW12138</p>
+      </footer>
     </>
   )
 }

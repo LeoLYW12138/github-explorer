@@ -62,7 +62,7 @@ function Content({ token }: ContentProps) {
           </p>
         )}
       </div>
-      <div role="listbox" className={styles["repo-list"]}>
+      <div role="listbox" aria-label="Repository list" className={styles["repo-list"]}>
         {repos.map((repo) => (
           <RepoCard repo={repo} key={repo.id} />
         ))}
