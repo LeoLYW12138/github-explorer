@@ -39,6 +39,7 @@ app.get("/oauth/callback", async (req: Request, res: Response) => {
     //   ok: false,
     //   error: "Error: no code in callback",
     // })
+    return
   }
 
   try {

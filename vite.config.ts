@@ -19,9 +19,6 @@ export default defineConfig({
     },
   },
   base: "/github-explorer/",
-  build: {
-    outDir: "docs",
-  },
   css: {
     modules: {
       generateScopedName(name, filename, css) {
