@@ -18,7 +18,7 @@ export default defineConfig({
       "node-fetch": "isomorphic-fetch",
     },
   },
-  base: "",
+  base: "/github-explorer/",
   build: {
     outDir: "docs",
   },
