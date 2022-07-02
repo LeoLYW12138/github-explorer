@@ -9,7 +9,7 @@ interface TokenAbsenceProps {
 function TokenAbsence({ token = null }: TokenAbsenceProps) {
   const url = `https://github.com/login/oauth/authorize?client_id=${
     import.meta.env.VITE_GITHUB_OAUTH_CLIENT_ID
-  }&redirect_uri=http://localhost:5000/oauth/callback&scope=repo,user`
+  }&redirect_uri=${import.meta.env.VITE_SERVER_HOST}oauth/callback&scope=repo,user`
 
   return (
     <>

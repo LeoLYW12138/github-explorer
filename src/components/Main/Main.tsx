@@ -30,15 +30,31 @@ function Main() {
       user && setUser(user)
     }
 
-    fetchUser()
+    token && fetchUser()
   }, [token])
 
   const handleSignOut = () => setToken(null)
+  const handleRevoke = () => {
+    fetch(`${import.meta.env.VITE_SERVER_HOST}revoke`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token: token,
+      }),
+    }).then(handleSignOut)
+  }
 
   return (
     <main className={styles.main}>
       {token && (
-        <UserCard user={user} className={styles.userCard} onSignOut={handleSignOut}></UserCard>
+        <UserCard
+          user={user}
+          className={styles.userCard}
+          onSignOut={handleSignOut}
+          onRevoke={handleRevoke}
+        ></UserCard>
       )}
       <div className={styles.container}>
         {token === null && tokenInvalid ? (

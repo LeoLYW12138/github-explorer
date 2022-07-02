@@ -1,5 +1,6 @@
 import { createOAuthAppAuth } from "@octokit/auth-oauth-app"
-import bodyParser from "body-parser"
+import { request } from "@octokit/request"
+
 import cors from "cors"
 import express, { Request, Response } from "express"
 import morgan from "morgan"
@@ -14,8 +15,8 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 app.use(morgan("tiny"))
-app.use(bodyParser.urlencoded({ extended: false })) // parse application/x-www-form-urlencoded
-app.use(bodyParser.json())
+app.use(express.urlencoded({ extended: false })) // parse application/x-www-form-urlencoded
+app.use(express.json())
 
 const auth = createOAuthAppAuth({
   clientType: "oauth-app",
@@ -101,6 +102,21 @@ app.get("/getToken/dev", (req: Request, res: Response) => {
       token: process.env.GITHUB_OAUTH_TOKEN_DEV,
     },
   })
+})
+
+app.delete("/revoke", async (req: Request, res: Response) => {
+  const { token } = req.body
+  console.log(req.body)
+
+  if (!token) {
+    return res.sendStatus(400)
+  }
+  const result = await auth.hook(request, "DELETE /applications/{client_id}/grant", {
+    client_id: config.GITHUB_OAUTH_CLIENT_ID,
+    access_token: token,
+  })
+
+  res.sendStatus(result.status)
 })
 
 app.listen(config.PORT, () => {
