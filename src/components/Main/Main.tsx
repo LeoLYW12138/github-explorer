@@ -9,17 +9,20 @@ import styles from "./Main.module.css"
 
 function Main() {
   const [query, setQuery] = useSearchParams()
+
   const [token, setToken] = useLocalStorage("user-explorer:token", null)
   const [user, setUser] = useState({} as User)
 
   let tokenInvalid = true
   useLayoutEffect(() => {
     const newToken = query.get("token")
+    // console.log("token", newToken)
     tokenInvalid = newToken === null || newToken.startsWith("__invalid__")
     if (tokenInvalid) return
 
     setToken(newToken)
-    setQuery({}, { replace: true })
+    setQuery("", { replace: true })
+    window.location.hash = ""
   }, [query])
 
   useEffect(() => {
