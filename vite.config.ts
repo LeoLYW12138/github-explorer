@@ -18,6 +18,7 @@ export default defineConfig({
       "node-fetch": "isomorphic-fetch",
     },
   },
+  base: "",
   build: {
     outDir: "docs",
   },
