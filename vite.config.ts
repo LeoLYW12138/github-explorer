@@ -18,11 +18,15 @@ export default defineConfig({
       "node-fetch": "isomorphic-fetch",
     },
   },
+  build: {
+    outDir: "demo",
+  },
   css: {
     modules: {
       generateScopedName(name, filename, css) {
         const nameRegex = /.*\/(\w+).module.css/
-        const componentName = filename.match(nameRegex)[1]
+        const matchGroups = filename.match(nameRegex)
+        const componentName = matchGroups !== null ? matchGroups[1] : "Component"
         const hash = Buffer.from(css).toString("base64").substring(0, 5)
         return `_${componentName}_${name}_${hash}`
       },
