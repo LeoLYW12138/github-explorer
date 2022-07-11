@@ -1,10 +1,12 @@
 import { graphql, GraphqlResponseError } from "@octokit/graphql"
 import {
-  GqlRepositoryReponse,
+  GqlOrgRepositoryResponse,
+  GqlRepositoryResponse,
   GqlUserReponse,
   Language,
   LanguagesRawData,
   RateLimit,
+  repoOrgQuery,
   repoQuery,
   Repository,
   SortArgs,
@@ -26,7 +28,7 @@ export const getRepos = async (
     if (useDummy) {
       result = repoSample
     } else
-      result = await graphql<GqlRepositoryReponse>({
+      result = await graphql<GqlRepositoryResponse>({
         query: repoQuery,
         username,
         sortBy,
@@ -42,19 +44,35 @@ export const getRepos = async (
     }
   } catch (error) {
     if (error instanceof GraphqlResponseError) {
-      console.error(error.message)
+      if (error.errors && error.errors[0].type === "NOT_FOUND") {
+        try {
+          const result = await graphql<GqlOrgRepositoryResponse>({
+            query: repoOrgQuery,
+            username,
+            sortBy,
+            firstNRepo,
+            headers: {
+              authorization: "bearer " + token,
+            },
+          })
+        } catch (error) {
+          if (error instanceof GraphqlResponseError) {
+            console.error(error.message)
 
-      // get partial data if available
-      return {
-        repositories: error.data?.user
-          ? (error.data.user.repositories.nodes as Repository[])
-          : undefined,
-        rateLimit: error.data?.rateLimit ? (error.data.rateLimit as RateLimit) : undefined,
-        error: error.errors ? error.errors[0] : undefined,
+            // get partial data if available
+            return {
+              repositories: error.data?.user
+                ? (error.data.user.repositories.nodes as Repository[])
+                : undefined,
+              rateLimit: error.data?.rateLimit ? (error.data.rateLimit as RateLimit) : undefined,
+              error: error.errors ? error.errors[0] : undefined,
+            }
+          } else {
+            console.error(error)
+            if (error instanceof Error) throw new Error(error.message)
+          }
+        }
       }
-    } else {
-      console.error(error)
-      if (error instanceof Error) throw new Error(error.message)
     }
   }
 }

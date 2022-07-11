@@ -86,8 +86,17 @@ query repositories($username: String!, $firstNRepo: Int = 10) {
 }
 `
 
-export interface GqlRepositoryReponse {
+export interface GqlRepositoryResponse {
   user: {
+    repositories: {
+      nodes: Repository[]
+    }
+  }
+  rateLimit: RateLimit
+}
+
+export interface GqlOrgRepositoryResponse {
+  organization: {
     repositories: {
       nodes: Repository[]
     }
@@ -115,6 +124,61 @@ export const repoQuery = `
 query repositories($username: String!, $sortBy: RepositoryOrder!, $firstNRepo: Int = 10) {
   user(login: $username) {
     repositories(first: $firstNRepo, orderBy: $sortBy) {
+      nodes {
+        name
+        owner {
+          login
+        }
+        description
+        isFork
+        forkCount
+        isPrivate
+        # collaborators {
+        #  totalCount
+        #}
+        createdAt
+        stargazerCount
+        pushedAt
+        url
+        diskUsage
+        id
+        parent {
+          nameWithOwner
+          url
+        }
+        branches: refs(refPrefix: "refs/heads/") {
+          totalCount
+        }
+        tags: refs(refPrefix: "refs/tags/") {
+          totalCount
+        }
+        languages(first: 10, orderBy: {field: SIZE, direction: DESC}) {
+          edges {
+            size
+          }
+          nodes {
+            color
+            name
+          }
+          totalSize
+        }
+        licenseInfo {
+          spdxId
+        }
+      }
+    }
+  }
+  rateLimit {
+    cost
+    limit
+    remaining
+    resetAt
+  }
+}`
+export const repoOrgQuery = `
+query repositories($username: String!, $sortBy: RepositoryOrder!, $firstNRepo: Int = 10) {
+  user(login: $username) {
+    organization(first: $firstNRepo, orderBy: $sortBy) {
       nodes {
         name
         owner {
