@@ -9,7 +9,7 @@ interface TokenAbsenceProps {
 function TokenAbsence({ token = null }: TokenAbsenceProps) {
   const url = `https://github.com/login/oauth/authorize?client_id=${
     import.meta.env.VITE_GITHUB_OAUTH_CLIENT_ID
-  }&redirect_uri=${import.meta.env.VITE_SERVER_HOST}oauth/callback&scope=repo,user`
+  }&redirect_uri=${import.meta.env.VITE_SERVER_HOST}oauth/callback`
 
   return (
     <>
@@ -25,6 +25,12 @@ function TokenAbsence({ token = null }: TokenAbsenceProps) {
       </p>
       <Button className={styles.button} link={url} newTab={false}>
         <span>Sign in</span>
+        <IconGithub style={{ marginLeft: "-0.25em" }} className={styles.icon} />
+        <IconArrowRight className={styles.icon} />
+      </Button>
+      <p></p>
+      <Button className={styles.button} link={url + "&scope=repo"} newTab={false}>
+        <span>Sign in (with private repo)</span>
         <IconGithub style={{ marginLeft: "-0.25em" }} className={styles.icon} />
         <IconArrowRight className={styles.icon} />
       </Button>
