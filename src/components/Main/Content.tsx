@@ -2,6 +2,7 @@ import { useState } from "react"
 
 import { ReactComponent as IconCancel } from "@/icons/IconCancel.svg"
 import { getRepos, RateLimit, Repository, SortDirections } from "@/lib/github"
+import { RepoAndRateLimit } from "@/lib/github/graphql"
 import RepoCard from "../RepoCard"
 import SearchBar, { Fields } from "../SearchBar"
 import styles from "./Main.module.css"
@@ -25,7 +26,9 @@ function Content({ token }: ContentProps) {
         numRepo
       )
       if (!res) return
-      const { repositories, rateLimit, error } = res
+      const { repositories, rateLimit, error } = res as unknown as RepoAndRateLimit & {
+        error: { type: string; message: string }
+      }
       repositories && setRepos(repositories)
       rateLimit && setRateLimit(rateLimit)
 

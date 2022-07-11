@@ -1,5 +1,6 @@
 import React, { useRef } from "react"
 
+import { useKeyPress } from "@/hooks"
 import { ReactComponent as IconCancel } from "@/icons/IconCancel.svg"
 import { ReactComponent as IconSearch } from "@/icons/IconSearch.svg"
 import styles from "./SearchInput.module.css"
@@ -14,13 +15,9 @@ const SearchInput = ({ onSubmit, shortcutKey = ["Control", "k"], ...rest }: Sear
   const searchInput = useRef<HTMLInputElement>(null)
 
   // listen for keyboard shortcut
-  // useKeyPress(
-  //   shortcutKey,
-  //   () => {
-  //     searchInput.current?.focus()
-  //   },
-  //   true
-  // )
+  useKeyPress(shortcutKey, () => {
+    searchInput.current?.focus()
+  })
 
   const formOnSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault()

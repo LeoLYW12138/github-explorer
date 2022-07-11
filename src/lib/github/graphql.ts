@@ -104,6 +104,11 @@ export interface GqlOrgRepositoryResponse {
   rateLimit: RateLimit
 }
 
+export type RepoAndRateLimit = {
+  repositories: Repository[]
+  rateLimit: RateLimit
+}
+
 export enum SortOptions {
   LAST_UPDATE = "PUSHED_AT",
   NAME = "NAME",
