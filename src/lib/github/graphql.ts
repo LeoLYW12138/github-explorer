@@ -177,8 +177,8 @@ query repositories($username: String!, $sortBy: RepositoryOrder!, $firstNRepo: I
 }`
 export const repoOrgQuery = `
 query repositories($username: String!, $sortBy: RepositoryOrder!, $firstNRepo: Int = 10) {
-  user(login: $username) {
-    organization(first: $firstNRepo, orderBy: $sortBy) {
+  organization(login: $username) {
+    repositories(first: $firstNRepo, orderBy: $sortBy) {
       nodes {
         name
         owner {
