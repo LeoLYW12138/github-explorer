@@ -9,10 +9,29 @@
   z-index: 3;
 }
 
+.wrapper {
+  position: relative;
+}
+
+.limit {
+  composes: font-mont from "@/utils.module.css";
+  color: var(--theme-color-tertiary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  width: max-content;
+  position: absolute;
+  top: 105%;
+  right: 5%;
+}
+
 @media (min-width: 1000px) {
   .searchBar {
     justify-content: center;
     gap: 1.2em;
+  }
+
+  .limit {
+    font-size: 0.875rem;
   }
 
   .dropdown-sort {

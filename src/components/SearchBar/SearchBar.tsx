@@ -1,7 +1,7 @@
 import { useId, useState } from "react"
 
 import type { options } from "@/components/Dropdown"
-import { SortOptions } from "@/lib/github"
+import { RateLimit, SortOptions } from "@/lib/github"
 import Dropdown from "../Dropdown"
 import styles from "./SearchBar.module.css"
 import SearchInput from "./SearchInput"
@@ -12,10 +12,11 @@ export type Fields = {
   numRepo: number
 }
 interface SearchBarProps {
+  rateLimit: RateLimit | null
   onSubmit: (fields: Fields) => void
 }
 
-const SearchBar = ({ onSubmit }: SearchBarProps) => {
+const SearchBar = ({ rateLimit, onSubmit }: SearchBarProps) => {
   const [username, setUsername] = useState("")
   const [sortBy, setSortBy] = useState("")
   const [numRepo, setNumRepo] = useState(0)
@@ -39,14 +40,19 @@ const SearchBar = ({ onSubmit }: SearchBarProps) => {
 
   return (
     <div className={styles.searchBar}>
-      <SearchInput
-        id="github-username"
-        name="github-username"
-        placeholder="Search User"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        onSubmit={handleSubmit}
-      />
+      <div className={styles.wrapper}>
+        <SearchInput
+          id="github-username"
+          name="github-username"
+          placeholder="Search User"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          onSubmit={handleSubmit}
+        />
+        {rateLimit && (
+          <span className={styles.limit}>{`${rateLimit.remaining}/${rateLimit.limit}`}</span>
+        )}
+      </div>
       <Dropdown
         className={styles["dropdown-sort"]}
         iconType="sort"

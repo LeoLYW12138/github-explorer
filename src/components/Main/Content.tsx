@@ -13,7 +13,7 @@ interface ContentProps {
 
 function Content({ token }: ContentProps) {
   const [repos, setRepos] = useState([] as Repository[])
-  const [rateLimit, setRateLimit] = useState({} as RateLimit)
+  const [rateLimit, setRateLimit] = useState<RateLimit | null>(null)
   const [error, setError] = useState("")
 
   const handleSubmit = async ({ username, sortBy, numRepo }: Fields) => {
@@ -35,7 +35,7 @@ function Content({ token }: ContentProps) {
       if (error) {
         if (error.type === "NOT_FOUND") {
           const matches = error.message.match(
-            /Could not resolve to a (\w+) with the login of '(\w*)'/
+            /Could not resolve to an? (\w+) with the login of '(\w*)'/
           )
           if (matches) {
             const [, entity, name] = [...matches]
@@ -57,7 +57,7 @@ function Content({ token }: ContentProps) {
 
   return (
     <>
-      <SearchBar onSubmit={handleSubmit}></SearchBar>
+      <SearchBar onSubmit={handleSubmit} rateLimit={rateLimit}></SearchBar>
       <div className={styles["error-container"]}>
         {error && (
           <p className={styles.error}>
