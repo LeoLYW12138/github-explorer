@@ -3,6 +3,7 @@ import { useState } from "react"
 import { ReactComponent as IconCancel } from "@/icons/IconCancel.svg"
 import { getRepos, RateLimit, Repository, SortDirections } from "@/lib/github"
 import { RepoAndRateLimit } from "@/lib/github/graphql"
+import Loading from "../Loading"
 import RepoCard from "../RepoCard"
 import SearchBar, { Fields } from "../SearchBar"
 import styles from "./Main.module.css"
@@ -15,10 +16,12 @@ function Content({ token }: ContentProps) {
   const [repos, setRepos] = useState([] as Repository[])
   const [rateLimit, setRateLimit] = useState<RateLimit | null>(null)
   const [error, setError] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async ({ username, sortBy, numRepo }: Fields) => {
     try {
       setError("")
+      setIsLoading(true)
       const res = await getRepos(
         token,
         username,
@@ -52,6 +55,8 @@ function Content({ token }: ContentProps) {
         if (e.message.search("Could not resolve to a User with the login of") !== -1)
           setError(`User "${username}" not found`)
       }
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -66,6 +71,7 @@ function Content({ token }: ContentProps) {
         )}
       </div>
       <div role="listbox" aria-label="Repository list" className={styles["repo-list"]}>
+        {isLoading && <Loading />}
         {repos.map((repo) => (
           <RepoCard repo={repo} key={repo.id} />
         ))}
