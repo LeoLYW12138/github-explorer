@@ -1,0 +1,50 @@
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.pagination {
+  background-color: var(--theme-color-tertiary);
+  border-radius: 9999px;
+  padding: 1rem 1.25rem;
+  margin: 0 auto;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.page {
+  composes: font-mont from "@/utils.module.css";
+  font-weight: 600;
+  color: var(--theme-color-secondary);
+  cursor: pointer;
+}
+
+.page:hover,
+.page:focus,
+.page.current {
+  color: var(--theme-color-primary);
+  text-decoration: underline;
+}
+
+.prev {
+  transform: rotate(90deg);
+}
+
+.next {
+  transform: rotate(-90deg);
+}
+
+.prev:hover,
+.prev:focus,
+.next:hover,
+.next:focus {
+  color: var(--theme-color-primary);
+  cursor: pointer;
+}
+
+.disabled {
+  color: var(--theme-color-secondary) !important;
+  cursor: auto !important;
+}

@@ -76,6 +76,7 @@ function Content({ token }: ContentProps) {
           <RepoCard repo={repo} key={repo.id} />
         ))}
       </div>
+      {/* <Pagination numPages={3} currPage={1} /> */}
     </>
   )
 }
