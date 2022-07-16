@@ -2,8 +2,9 @@ import { useState } from "react"
 
 import { ReactComponent as IconCancel } from "@/icons/IconCancel.svg"
 import { getRepos, RateLimit, Repository, SortDirections } from "@/lib/github"
-import { RepoAndRateLimit } from "@/lib/github/graphql"
+import { PageInfo, RepoAndRateLimit } from "@/lib/github/graphql"
 import Loading from "../Loading"
+import Pagination from "../Pagination"
 import RepoCard from "../RepoCard"
 import SearchBar, { Fields } from "../SearchBar"
 import styles from "./Main.module.css"
@@ -15,6 +16,9 @@ interface ContentProps {
 function Content({ token }: ContentProps) {
   const [repos, setRepos] = useState([] as Repository[])
   const [rateLimit, setRateLimit] = useState<RateLimit | null>(null)
+  const [pageInfo, setPageInfo] = useState<
+    (PageInfo & { totalPage: number; currPage: number }) | null
+  >(null)
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
@@ -76,7 +80,13 @@ function Content({ token }: ContentProps) {
           <RepoCard repo={repo} key={repo.id} />
         ))}
       </div>
-      {/* <Pagination numPages={3} currPage={1} /> */}
+      {pageInfo && (
+        <Pagination
+          numPages={pageInfo.totalPage}
+          currPage={pageInfo.currPage}
+          onChangePage={(page) => {}}
+        />
+      )}
     </>
   )
 }

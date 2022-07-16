@@ -60,6 +60,11 @@ export interface RateLimit {
   resetAt: string
 }
 
+export interface PageInfo {
+  endCursor: string
+  startCursor: string
+}
+
 export interface User {
   avatarUrl: string
   login: string
@@ -89,15 +94,20 @@ query repositories($username: String!, $firstNRepo: Int = 10) {
 export interface GqlRepositoryResponse {
   user: {
     repositories: {
+      pageInfo: PageInfo
+      totalCount: number
       nodes: Repository[]
     }
   }
+
   rateLimit: RateLimit
 }
 
 export interface GqlOrgRepositoryResponse {
   organization: {
     repositories: {
+      pageInfo: PageInfo
+      totalCount: number
       nodes: Repository[]
     }
   }
@@ -107,6 +117,8 @@ export interface GqlOrgRepositoryResponse {
 export type RepoAndRateLimit = {
   repositories: Repository[]
   rateLimit: RateLimit
+  pageInfo: PageInfo
+  totalCount: number
 }
 
 export enum SortOptions {
@@ -126,9 +138,14 @@ export interface SortArgs {
 }
 
 export const repoQuery = `
-query repositories($username: String!, $sortBy: RepositoryOrder!, $firstNRepo: Int = 10) {
+query repositories($username: String!, $sortBy: RepositoryOrder!, $afterCursor: String, $firstNRepo: Int = 10) {
   user(login: $username) {
     repositories(first: $firstNRepo, orderBy: $sortBy) {
+      pageInfo {
+        endCursor
+        startCursor
+      }
+      totalCount
       nodes {
         name
         owner {
@@ -138,9 +155,6 @@ query repositories($username: String!, $sortBy: RepositoryOrder!, $firstNRepo: I
         isFork
         forkCount
         isPrivate
-        # collaborators {
-        #  totalCount
-        #}
         createdAt
         stargazerCount
         pushedAt
@@ -181,9 +195,14 @@ query repositories($username: String!, $sortBy: RepositoryOrder!, $firstNRepo: I
   }
 }`
 export const repoOrgQuery = `
-query repositories($username: String!, $sortBy: RepositoryOrder!, $firstNRepo: Int = 10) {
+query repositories($username: String!, $sortBy: RepositoryOrder!, $afterCursor: String, $firstNRepo: Int = 10) {
   organization(login: $username) {
     repositories(first: $firstNRepo, orderBy: $sortBy) {
+      pageInfo {
+        endCursor
+        startCursor
+      }
+      totalCount
       nodes {
         name
         owner {

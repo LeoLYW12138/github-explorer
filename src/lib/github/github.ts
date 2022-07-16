@@ -6,6 +6,7 @@ import {
   GqlUserReponse,
   Language,
   LanguagesRawData,
+  PageInfo,
   RateLimit,
   RepoAndRateLimit,
   repoOrgQuery,
@@ -44,12 +45,14 @@ export const getRepos = async (
       return {
         repositories: res.user.repositories.nodes as Repository[],
         rateLimit: res.rateLimit as RateLimit,
+        pageInfo: res.user.repositories.pageInfo as PageInfo,
+        totalCount: res.user.repositories.totalCount,
         error: undefined,
       }
     })
     .catch((error) => {
       if (error instanceof GraphqlResponseError && error.errors) {
-        return { repositories: undefined, rateLimit: undefined, error: error.errors[0].type }
+        return { error: error.errors[0].type }
       }
       console.error(error.message)
       if (error instanceof Error) throw new Error(error.message)
@@ -73,11 +76,8 @@ export const getRepos = async (
               authorization: "bearer " + token,
             },
           })
-        } else if (
-          data &&
-          (data as { repositories: Repository[]; rateLimit: RateLimit }).repositories
-        ) {
-          return data as { repositories: Repository[]; rateLimit: RateLimit }
+        } else if (data && (data as RepoAndRateLimit).repositories) {
+          return data as RepoAndRateLimit
         }
       }
     )
