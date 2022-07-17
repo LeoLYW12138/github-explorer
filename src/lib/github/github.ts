@@ -1,5 +1,4 @@
 import { graphql, GraphqlResponseError } from "@octokit/graphql"
-import { GraphQlResponse } from "@octokit/graphql/dist-types/types"
 import {
   GqlOrgRepositoryResponse,
   GqlRepositoryResponse,
@@ -16,22 +15,92 @@ import {
   User,
   userQuery,
 } from "./graphql"
-import * as repoSample from "./repoSampleData.json"
 
 const useDummy = false
+type PartialData = Partial<RepoAndRateLimit & { error: { type: string; message: string } }>
 
 export const getRepos = async (
   token: string,
   username: string,
   sortBy: SortArgs,
   firstNRepo = 10
-) => {
-  if (useDummy)
-    return {
-      repositories: repoSample.user.repositories.nodes as Repository[],
-      rateLimit: repoSample.rateLimit as RateLimit,
-    }
+): Promise<PartialData> => {
+  try {
+    return await getUserRepos(token, username, sortBy, firstNRepo)
+  } catch (error) {
+    if (error instanceof GraphqlResponseError && error.errors) {
+      const { type, message } = error.errors[0]
 
+      // try catch for getOrgRepos
+      try {
+        if (type === "NOT_FOUND") return await getOrgRepos(token, username, sortBy, firstNRepo)
+      } catch (error) {
+        if (error instanceof GraphqlResponseError && error.errors) {
+          const { type, message } = error.errors[0]
+          return { error: { type, message } }
+        }
+
+        if (error instanceof Error) throw new Error(error.message)
+        return {}
+      }
+
+      // try catch for getUserRepos
+      return { error: { type, message } }
+    }
+    if (error instanceof Error) throw new Error(error.message)
+    return {}
+  }
+}
+
+export const getOrgRepos = async (
+  token: string,
+  username: string,
+  sortBy: SortArgs,
+  firstNRepo = 10
+): Promise<PartialData> => {
+  return graphql<GqlOrgRepositoryResponse>({
+    query: repoOrgQuery,
+    username,
+    sortBy,
+    firstNRepo,
+    headers: {
+      authorization: "bearer " + token,
+    },
+  })
+    .then((res) => {
+      return {
+        repositories: res.organization.repositories.nodes as Repository[],
+        pageInfo: res.organization.repositories.pageInfo as PageInfo,
+        totalCount: res.organization.repositories.totalCount,
+        rateLimit: res.rateLimit as RateLimit,
+      }
+    })
+    .catch((error) => {
+      if (error instanceof GraphqlResponseError<GqlOrgRepositoryResponse>) {
+        const err = error as GraphqlResponseError<GqlOrgRepositoryResponse>
+        console.error(err.message)
+        if (err.errors?.[0].type === "NOT_FOUND") throw error
+        // get partial data if available
+        return {
+          repositories: err.data?.organization.repositories.nodes as Repository[],
+          pageInfo: err.data?.organization.repositories.pageInfo as PageInfo,
+          totalCount: err.data?.organization.repositories.totalCount,
+          rateLimit: err.data?.rateLimit as RateLimit,
+          error: err.errors?.[0],
+        }
+      }
+      console.error(error)
+      if (error instanceof Error) throw new Error(error.message)
+      return {}
+    })
+}
+
+export const getUserRepos = async (
+  token: string,
+  username: string,
+  sortBy: SortArgs,
+  firstNRepo = 10
+): Promise<PartialData> => {
   return graphql<GqlRepositoryResponse>({
     query: repoQuery,
     username,
@@ -44,138 +113,31 @@ export const getRepos = async (
     .then((res) => {
       return {
         repositories: res.user.repositories.nodes as Repository[],
-        rateLimit: res.rateLimit as RateLimit,
         pageInfo: res.user.repositories.pageInfo as PageInfo,
         totalCount: res.user.repositories.totalCount,
-        error: undefined,
+        rateLimit: res.rateLimit as RateLimit,
       }
     })
     .catch((error) => {
-      if (error instanceof GraphqlResponseError && error.errors) {
-        return { error: error.errors[0].type }
-      }
-      console.error(error.message)
-      if (error instanceof Error) throw new Error(error.message)
-    })
-    .then(
-      (
-        data
-      ):
-        | GqlOrgRepositoryResponse
-        | GraphQlResponse<GqlOrgRepositoryResponse>
-        | RepoAndRateLimit
-        | undefined => {
-        if (data?.error === "NOT_FOUND") {
-          // search for organization
-          return graphql<GqlOrgRepositoryResponse>({
-            query: repoOrgQuery,
-            username,
-            sortBy,
-            firstNRepo,
-            headers: {
-              authorization: "bearer " + token,
-            },
-          })
-        } else if (data && (data as RepoAndRateLimit).repositories) {
-          return data as RepoAndRateLimit
-        }
-      }
-    )
-    .then((res) => {
-      if (!res) return {}
-      if ((res as RepoAndRateLimit)?.repositories) return res as RepoAndRateLimit
-      else if ((res as GqlOrgRepositoryResponse)?.organization) {
-        return {
-          repositories: (res as GqlOrgRepositoryResponse).organization.repositories
-            .nodes as Repository[],
-          rateLimit: res.rateLimit as RateLimit,
-          error: undefined,
-        }
-      }
-    })
-    .catch((error) => {
-      if (error instanceof GraphqlResponseError) {
-        console.error(error.message)
+      if (error instanceof GraphqlResponseError<GqlRepositoryResponse>) {
+        const err = error as GraphqlResponseError<GqlRepositoryResponse>
+        console.error(err.message)
 
+        if (err.errors?.[0].type === "NOT_FOUND") throw error
         // get partial data if available
         return {
-          repositories: error.data?.user
-            ? (error.data.user.repositories.nodes as Repository[])
-            : error.data.organization
-            ? (error.data.organization.repositories.nodes as Repository[])
-            : undefined,
-          rateLimit: error.data?.rateLimit ? (error.data.rateLimit as RateLimit) : undefined,
-          error: error.errors ? error.errors[0] : undefined,
+          repositories: err.data?.user.repositories.nodes as Repository[],
+          pageInfo: err.data?.user.repositories.pageInfo as PageInfo,
+          totalCount: err.data?.user.repositories.totalCount,
+          rateLimit: err.data?.rateLimit as RateLimit,
+          error: err.errors?.[0],
         }
       }
       console.error(error)
       if (error instanceof Error) throw new Error(error.message)
+      return {}
     })
 }
-
-// export const getRepos = async (
-//   token: string,
-//   username: string,
-//   sortBy: SortArgs,
-//   firstNRepo = 10
-// ) => {
-//   try {
-//     let result
-//     if (useDummy) {
-//       result = repoSample
-//     } else
-//       result = await graphql<GqlRepositoryResponse>({
-//         query: repoQuery,
-//         username,
-//         sortBy,
-//         firstNRepo,
-//         headers: {
-//           authorization: "bearer " + token,
-//         },
-//       })
-
-//     return {
-//       repositories: result.user.repositories.nodes as Repository[],
-//       rateLimit: result.rateLimit as RateLimit,
-//     }
-//   } catch (error) {
-//     if (error instanceof GraphqlResponseError) {
-//       if (error.errors && error.errors[0].type === "NOT_FOUND") {
-//         try {
-//           const result = await graphql<GqlOrgRepositoryResponse>({
-//             query: repoOrgQuery,
-//             username,
-//             sortBy,
-//             firstNRepo,
-//             headers: {
-//               authorization: "bearer " + token,
-//             },
-//           })
-//           return {
-//             repositories: result.organization.repositories.nodes as Repository[],
-//             rateLimit: result.rateLimit as RateLimit,
-//           }
-//         } catch (error) {
-//           if (error instanceof GraphqlResponseError) {
-//             console.error(error.message)
-
-//             // get partial data if available
-//             return {
-//               repositories: error.data?.user
-//                 ? (error.data.user.repositories.nodes as Repository[])
-//                 : undefined,
-//               rateLimit: error.data?.rateLimit ? (error.data.rateLimit as RateLimit) : undefined,
-//               error: error.errors ? error.errors[0] : undefined,
-//             }
-//           } else {
-//             console.error(error)
-//             if (error instanceof Error) throw new Error(error.message)
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
 
 export const getUser = async (token: string) => {
   try {

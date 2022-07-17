@@ -2,7 +2,7 @@ import { useState } from "react"
 
 import { ReactComponent as IconCancel } from "@/icons/IconCancel.svg"
 import { getRepos, RateLimit, Repository, SortDirections } from "@/lib/github"
-import { PageInfo, RepoAndRateLimit } from "@/lib/github/graphql"
+import { PageInfo } from "@/lib/github/graphql"
 import Loading from "../Loading"
 import Pagination from "../Pagination"
 import RepoCard from "../RepoCard"
@@ -32,12 +32,14 @@ function Content({ token }: ContentProps) {
         { field: sortBy, direction: SortDirections.DSC },
         numRepo
       )
+      console.log(res)
       if (!res) return
-      const { repositories, rateLimit, error } = res as unknown as RepoAndRateLimit & {
-        error: { type: string; message: string }
-      }
+      const { repositories, pageInfo: cursors, totalCount, rateLimit, error } = res
       repositories && setRepos(repositories)
       rateLimit && setRateLimit(rateLimit)
+      cursors &&
+        totalCount &&
+        setPageInfo({ ...cursors, totalPage: Math.ceil(totalCount / numRepo), currPage: 1 })
 
       if (error) {
         if (error.type === "NOT_FOUND") {

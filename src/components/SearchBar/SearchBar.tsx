@@ -57,7 +57,7 @@ const SearchBar = ({ rateLimit, onSubmit }: SearchBarProps) => {
         className={styles["dropdown-sort"]}
         iconType="sort"
         options={sortOptions}
-        defaultOption={sortOptions[0]}
+        defaultOption={sortOptions[1]}
         desc="Sort by"
         onSelect={(option) => setSortBy(option.value)}
       ></Dropdown>
