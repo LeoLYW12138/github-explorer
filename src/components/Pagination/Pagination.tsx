@@ -8,13 +8,19 @@ interface PaginationProps {
 }
 
 function Pagination({ numPages, currPage, onChangePage }: PaginationProps) {
+  const handleOnChange = (page: number) => {
+    if (!onChangePage || page < 1 || page > numPages) return
+
+    onChangePage(page)
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.pagination}>
         <IconChevronDown
           tabIndex={0}
           className={`${styles.prev} ${currPage === 1 ? styles.disabled : ""}`}
-          onClick={() => onChangePage && currPage !== 1 && onChangePage(currPage - 1)}
+          onClick={() => handleOnChange(currPage - 1)}
         />
         {Array(numPages)
           .fill(0)
@@ -23,7 +29,7 @@ function Pagination({ numPages, currPage, onChangePage }: PaginationProps) {
               tabIndex={0}
               key={i}
               className={`${styles.page} ${currPage === i + 1 ? styles.current : ""}`.trim()}
-              onClick={() => onChangePage && onChangePage(i + 1)}
+              onClick={() => handleOnChange(i + 1)}
             >
               {i + 1}
             </span>
@@ -31,7 +37,7 @@ function Pagination({ numPages, currPage, onChangePage }: PaginationProps) {
         <IconChevronDown
           tabIndex={0}
           className={`${styles.next} ${currPage === numPages ? styles.disabled : ""}`}
-          onClick={() => onChangePage && currPage !== numPages && onChangePage(currPage + 1)}
+          onClick={() => handleOnChange(currPage + 1)}
         />
       </div>
     </div>

@@ -138,9 +138,9 @@ export interface SortArgs {
 }
 
 export const repoQuery = `
-query repositories($username: String!, $sortBy: RepositoryOrder!,  $firstNRepo: Int = 10) {
+query repositories($username: String!, $sortBy: RepositoryOrder!, $afterCursor: String, $firstNRepo: Int = 10) {
   user(login: $username) {
-    repositories(first: $firstNRepo, orderBy: $sortBy) {
+    repositories(first: $firstNRepo, orderBy: $sortBy, after: $afterCursor) {
       pageInfo {
         endCursor
         startCursor
@@ -195,9 +195,9 @@ query repositories($username: String!, $sortBy: RepositoryOrder!,  $firstNRepo: 
   }
 }`
 export const repoOrgQuery = `
-query repositories($username: String!, $sortBy: RepositoryOrder!,  $firstNRepo: Int = 10) {
+query repositories($username: String!, $sortBy: RepositoryOrder!, $afterCursor: String, $firstNRepo: Int = 10) {
   organization(login: $username) {
-    repositories(first: $firstNRepo, orderBy: $sortBy) {
+    repositories(first: $firstNRepo, orderBy: $sortBy, after: $afterCursor) {
       pageInfo {
         endCursor
         startCursor
@@ -212,9 +212,6 @@ query repositories($username: String!, $sortBy: RepositoryOrder!,  $firstNRepo: 
         isFork
         forkCount
         isPrivate
-        # collaborators {
-        #  totalCount
-        #}
         createdAt
         stargazerCount
         pushedAt

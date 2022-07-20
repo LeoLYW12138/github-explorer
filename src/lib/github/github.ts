@@ -18,22 +18,31 @@ import {
 
 const useDummy = false
 type PartialData = Partial<RepoAndRateLimit & { error: { type: string; message: string } }>
+export interface repoParams {
+  token: string
+  username: string
+  sortBy: SortArgs
+  firstNRepo: number
+  afterCursor: string | null
+}
 
 export const getRepos = async (
   token: string,
   username: string,
   sortBy: SortArgs,
-  firstNRepo = 10
+  firstNRepo = 10,
+  afterCursor: string | null = null
 ): Promise<PartialData> => {
   try {
-    return await getUserRepos(token, username, sortBy, firstNRepo)
+    return await getUserRepos(token, username, sortBy, firstNRepo, afterCursor)
   } catch (error) {
     if (error instanceof GraphqlResponseError && error.errors) {
       const { type, message } = error.errors[0]
 
       // try catch for getOrgRepos
       try {
-        if (type === "NOT_FOUND") return await getOrgRepos(token, username, sortBy, firstNRepo)
+        if (type === "NOT_FOUND")
+          return await getOrgRepos(token, username, sortBy, firstNRepo, afterCursor)
       } catch (error) {
         if (error instanceof GraphqlResponseError && error.errors) {
           const { type, message } = error.errors[0]
@@ -56,13 +65,15 @@ export const getOrgRepos = async (
   token: string,
   username: string,
   sortBy: SortArgs,
-  firstNRepo = 10
+  firstNRepo = 10,
+  afterCursor: string | null = null
 ): Promise<PartialData> => {
   return graphql<GqlOrgRepositoryResponse>({
     query: repoOrgQuery,
     username,
     sortBy,
     firstNRepo,
+    afterCursor,
     headers: {
       authorization: "bearer " + token,
     },
@@ -99,13 +110,15 @@ export const getUserRepos = async (
   token: string,
   username: string,
   sortBy: SortArgs,
-  firstNRepo = 10
+  firstNRepo = 10,
+  afterCursor: string | null = null
 ): Promise<PartialData> => {
   return graphql<GqlRepositoryResponse>({
     query: repoQuery,
     username,
     sortBy,
     firstNRepo,
+    afterCursor,
     headers: {
       authorization: "bearer " + token,
     },
