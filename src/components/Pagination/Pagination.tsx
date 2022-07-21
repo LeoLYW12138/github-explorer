@@ -22,18 +22,20 @@ function Pagination({ numPages, currPage, onChangePage }: PaginationProps) {
           className={`${styles.prev} ${currPage === 1 ? styles.disabled : ""}`}
           onClick={() => handleOnChange(currPage - 1)}
         />
-        {Array(numPages)
-          .fill(0)
-          .map((_, i) => (
-            <span
-              tabIndex={0}
-              key={i}
-              className={`${styles.page} ${currPage === i + 1 ? styles.current : ""}`.trim()}
-              onClick={() => handleOnChange(i + 1)}
-            >
-              {i + 1}
-            </span>
-          ))}
+        <div className={`scrollbar ${styles.wrapper}`}>
+          {Array(numPages)
+            .fill(0)
+            .map((_, i) => (
+              <span
+                tabIndex={0}
+                key={i}
+                className={`${styles.page} ${currPage === i + 1 ? styles.current : ""}`.trim()}
+                onClick={() => handleOnChange(i + 1)}
+              >
+                {i + 1}
+              </span>
+            ))}
+        </div>
         <IconChevronDown
           tabIndex={0}
           className={`${styles.next} ${currPage === numPages ? styles.disabled : ""}`}

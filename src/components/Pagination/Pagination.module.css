@@ -4,6 +4,8 @@
 }
 
 .pagination {
+  max-width: 80%;
+
   background-color: var(--theme-color-tertiary);
   border-radius: 9999px;
   padding: 1rem 1.25rem;
@@ -14,11 +16,23 @@
   gap: 1em;
 }
 
+.wrapper {
+  flex: 1 1 0;
+  overflow-y: hidden;
+  overflow-x: auto;
+  user-select: none;
+}
+
+.page + .page {
+  margin-left: 1em;
+}
+
 .page {
   composes: font-mont from "@/utils.module.css";
   font-weight: 600;
   color: var(--theme-color-secondary);
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .page:hover,
