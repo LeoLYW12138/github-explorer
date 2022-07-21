@@ -41,7 +41,7 @@ function Content({ token }: ContentProps) {
     }
   }
 
-  const fetchRepo = async (args: Fields | null = null) => {
+  const fetchRepo = async (args: Fields | null = null, endCursor?: string) => {
     if (!args) return
     const { username, sortBy, numRepo } = args
     // get repo
@@ -50,7 +50,7 @@ function Content({ token }: ContentProps) {
       username,
       { field: sortBy, direction: SortDirections.DSC },
       numRepo,
-      pageInfo ? pageInfo.pageInfos[pageInfo.currPage - 1].endCursor : null
+      endCursor
     )
     console.log(res)
     if (!res) return
@@ -73,14 +73,19 @@ function Content({ token }: ContentProps) {
 
         return {
           ...prev,
-          currPage: prev.currPage + 1,
           pageInfos: [...prev.pageInfos, cursors],
         }
       })
 
     // handleError
     handleError(error)
-    await new Promise((resolve) => setTimeout(() => resolve(null), 100))
+    return cursors
+  }
+
+  const resetStates = () => {
+    setRepos([])
+    setPageInfo(null)
+    setRateLimit(null)
   }
 
   const handleSubmit = async ({ username, sortBy, numRepo }: Fields) => {
@@ -88,6 +93,7 @@ function Content({ token }: ContentProps) {
       setError("")
       setIsLoading(true)
       setFields({ username, sortBy, numRepo })
+      resetStates()
       await fetchRepo({ username, sortBy, numRepo })
     } catch (e) {
       if (e instanceof Error) {
@@ -104,14 +110,13 @@ function Content({ token }: ContentProps) {
     if (!pageInfo || page === pageInfo?.currPage) return
 
     setIsLoading(true)
-    const { currPage } = pageInfo
-    if (page > currPage) {
+    const { pageInfos, currPage } = pageInfo
+    if (page > pageInfos.length) {
       // fetch until reached target page
       // note this will change pageInfo state
-      for (let i = 0; i < page - currPage; i++) await fetchRepo(fields)
-
-      setIsLoading(false)
-      return
+      let cursors: PageInfo | undefined = pageInfos[currPage - 1]
+      for (let i = 0; i < page - pageInfos.length; i++)
+        cursors = await fetchRepo(fields, cursors?.endCursor)
     }
 
     // set current page to target page
@@ -148,6 +153,7 @@ function Content({ token }: ContentProps) {
         {repoList.map((repo) => (
           <RepoCard repo={repo} key={repo.id} />
         ))}
+        {isLoading && repoList.length !== 0 && <Loading />}
       </div>
       {pageInfo && (
         <Pagination
